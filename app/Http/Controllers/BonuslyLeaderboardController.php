@@ -11,11 +11,12 @@ class BonuslyLeaderboardController extends Controller
       // dd($request);
       // echo('hi');
 
-      $max = $this->setupBonuslyApiCall();
+      // $max = $this->getPercentages($this->setupBonuslyApiCall());
+      $max = $this->getPercentages([0,1,9,5,3,12,32,5,6,12,232,4,34]);
+       dd($max);
       $data = $this->setupBonuslyApiCall();
 
-      var_dump($data);
-      return view('leaderboard')->with('data' , $data);
+      return view('leaderboard', compact('data', 'max'));
 
     }
 
@@ -52,7 +53,19 @@ class BonuslyLeaderboardController extends Controller
         return $res;
       }
 
-      function maximumBonus($data) {
-
+      function getPercentages($data) {
+        $res = new \stdClass;
+        $hi = null;
+        $count = 0;
+        foreach ($data as $d) {
+          echo $d;
+          if ($hi == null || $d > $hi) {
+            $hi = $d;
+          }
+          $count++;
+        }
+        $res->hi = $hi;
+        $res->count = $count;
+        return $res;
       }
 }
