@@ -63,7 +63,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 }
 
 #leaderboard_bars {
-  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.8);
+  text-shadow:   0px 1px 1px rgba(0, 0, 0, 0.6);
   font-size: 1.3em;
   font-weight: bolder;
   .progress {
@@ -81,8 +81,8 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
       background-color: $progress-bar-bg-color;
       min-width: 3.5%;
       font-size: .8em;
-      color: #ffd900;
-      text-shadow: 0px 2px 2px rgba(32, 23, 104, 0.8);
+      color: #2a4a60;
+      text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);  
 
       // this adds a white chevron sticking into the green pogress bar
       // &:after {
@@ -104,6 +104,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   color: #d8e2e6;
   box-shadow: 0px 8px 5px 3px rgba(0, 0, 0, 0.25);
   border: 3px solid;
+  font-weight: 900;
     border-radius: 6px;
   .pic img {
     height: 2em;
