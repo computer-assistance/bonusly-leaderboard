@@ -15,6 +15,7 @@
     <div class="row">
       <div id="leaderboard_bars" class="col-lg-8">
           @foreach($data as $d)
+          <span class="progress-bar-img"><img src="{{ $d->user->profile_pic_url }}"></span>
           <div class="progress box">
             <label class="progress_label">{{ ucfirst($d->user->display_name) }}</label>
             <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="$d->percentage" aria-valuemin="0" aria-valuemax="100" style="width: {{ $d->percentage }}%;">
