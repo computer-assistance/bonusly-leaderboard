@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use Cache;
 use Response;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BonuslyLeaderboardController extends Controller
 {
   public function showBoard() {
-    // dd($request);
-    $data = new \stdClass;
-    // echo('hi');
 
-    $data1 = $this->setupBonuslyApiCall();
-    $data = $this->analyseData($this->setupBonuslyApiCall());
-    // $metaData = $this->analyseData([0,1,9,5,3,12,32,5,6,12,232,4,34]);
+    if (!Cache::has('bonusData')) {
+      $data = new \stdClass;
 
+      $data1 = $this->setupBonuslyApiCall();
+      $data = $this->analyseData($this->setupBonuslyApiCall());
 
-    // dd($data, $data1);
-
+      $expiresAt = Carbon::now()->addMinutes(2);
+			Cache::put('data', $data, $expiresAt);
+    }
+    else {
+      $data = Cache::get('data');
+    }
     return view('leaderboard', compact('data'));
-
   }
 
-
-
   // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
-
-  // 'url' => 'http://monitor.wiseserve.net',
-
 
   function setupBonuslyApiCall() {
 
