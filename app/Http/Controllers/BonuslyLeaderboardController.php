@@ -11,14 +11,19 @@ class BonuslyLeaderboardController extends Controller
 {
   public function showBoard() {
 
+
     if (!Cache::has('bonusData')) {
       $data = new \stdClass;
 
-      $data1 = $this->setupBonuslyApiCall();
-      $data = $this->analyseData($this->setupBonuslyApiCall());
 
-      $expiresAt = Carbon::now()->addMinutes(2);
-			Cache::put('data', $data, $expiresAt);
+    $data = new \stdClass;
+
+    $data1 = $this->makeBonuslyApiCall(); // testing
+
+    $data = $this->analyseData($this->makeBonuslyApiCall());
+
+    $expiresAt = Carbon::now()->addMinutes(2);
+		Cache::put('data', $data, $expiresAt);
     }
     else {
       $data = Cache::get('data');
@@ -28,22 +33,30 @@ class BonuslyLeaderboardController extends Controller
 
   // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
 
-  function setupBonuslyApiCall() {
+  // 'url' => 'http://monitor.wiseserve.net',
+
+
+  function makeBonuslyApiCall() {
 
     $browser = new \Buzz\Browser();
-    // dd($browser);
-    $bonsulyApiCall = array(
-      'url'           => 'https://bonus.ly/api/v1/analytics/standouts',
-      'access_token'  => 'e288e7aadf0e48c1d0b3a5b84699e15a'
 
+    $bonsulyApiGiverCall = array(
+      'url'           => 'https://bonus.ly/api/v1/analytics/standouts',
+      'access_token'  => 'e288e7aadf0e48c1d0b3a5b84699e15a',
+      ''
     );
 
-    // $format = 'json';
+    $bonsulyApiReceiverCall = array(
+      'url'           => 'https://bonus.ly/api/v1/analytics/standouts',
+      'access_token'  => 'e288e7aadf0e48c1d0b3a5b84699e15a',
+      'parameters'    => [ 'role' => 'receiver' ]
+    );
 
-    $url = $bonsulyApiCall['url'];
-    $access_token = $bonsulyApiCall['access_token'];
+    $url = $bonsulyApiGiverCall['url'];
+    $access_token = $bonsulyApiGiverCall['access_token'];
+    $parameters = $bonsulyApiReceiverCall['parameters'];
 
-    $apiUrl = $url.'?access_token='.$access_token;
+    $apiUrl = $url.'?access_token='. $access_token . '&parameters={\'role\':\'receiver\'}' ;
 
     $hostResponse = $browser->get($apiUrl, []);
     $content = json_decode($hostResponse->getContent());
