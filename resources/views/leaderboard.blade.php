@@ -3,10 +3,10 @@
 @section('content')
 <div id="leaderboard_title_bar" class="container">
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-lg-3 col-md-4 col-sm-12">
       <img src="img/bonusly_header_logo_wht-1.png">
     </div>
-    <div class="col-lg-3 pull-right">
+    <div class="col-lg-3 col-md-4 col-sm-12 pull-right">
       <h2>Bonusly Recievers</h2>
     </div>
   </div>
@@ -24,7 +24,7 @@
           </div>
           @endforeach
     </div>
-    <div id="leaderboard_table" class="col-lg-3 pull-right">
+    <div id="leaderboard_table" class="col-lg-3 col-md-12 pull-right">
 
       <table class="table table-striped">
         <thead>
