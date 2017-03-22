@@ -1,6 +1,5 @@
-
-// Body
-
+// $progress-bar-bg-color: blue;
+$progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 
 .blue-green-overlay:before {
   content: ' ';
@@ -18,7 +17,8 @@
   right: 0;
   bottom: 0;
   z-index: -1;
-  background: linear-gradient(to bottom, #3c692f 0%, rgba(40, 126, 104, 0.8) 80%, rgba(73, 143, 126, 0.75) 100%)
+  background: linear-gradient(to bottom, #3c692f 0%, rgba(40, 126, 104, 0.8) 80%, rgba(73, 143, 126, 0.75) 100%);
+  background: linear-gradient(to bottom, #3c692f 0%, rgba(89, 126, 40, 0.8) 80%, rgba(104, 143, 73, 0.75) 100%);
 }
 
 .et_pb_section {
@@ -36,7 +36,21 @@
 .progress_label{
   color: #3097d1;
   color: #336b8a;
-  margin-left: 10px;
+  padding-left: 10px;
+  position: relative;
+  // this adds a green chevron sticking into the white part of the progress bar
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    border-left: 7px solid;
+    border-left-color: $progress-bar-bg-color;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+  }
 }
 
 #leaderboard_title_bar {
@@ -60,14 +74,28 @@
     border-radius: 4px;
     box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.2);
     line-height: 1.7;
-  .progress-bar {
-    padding: 0 1px;
-    line-height: 1.9;
-    background-color: rgba(116, 188, 68, 0.75);
-    min-width: 3.5%;
-    font-size: .8em;
-    color: #ffd900;
-    text-shadow: 0px 2px 2px rgba(32, 23, 104, 0.8);
+    .progress-bar {
+      position: relative;
+      padding: 0 1px;
+      line-height: 1.9;
+      background-color: $progress-bar-bg-color;
+      min-width: 3.5%;
+      font-size: .8em;
+      color: #ffd900;
+      text-shadow: 0px 2px 2px rgba(32, 23, 104, 0.8);
+
+      // this adds a white chevron sticking into the green pogress bar
+      // &:after {
+      //   content: "";
+      //   position: absolute;
+      //   left: 0;
+      //   bottom: 0;
+      //   width: 100%;
+      //   height: 0;
+      //   border-right: 7px solid #f5f5f5;
+      //   border-top: 15px solid transparent;
+      //   border-bottom: 15px solid transparent;
+      // }
     }
   }
 }
@@ -79,5 +107,27 @@
     border-radius: 6px;
   .pic img {
     height: 2em;
+    border-radius: 15px;
   }
 }
+//
+// .box{
+//     margin: auto;
+// 	  background: #eee;
+// 	  border: 3px solid transparent;
+// 	  // -moz-border-image: -moz-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
+// 	  // -webkit-border-image: -webkit-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
+// 	  // border-image: linear-gradient(to bottom right, #3acfd5 0%, #3a4ed5 100%);
+//     border-image: linear-gradient(to bottom right, #f6e6b4 0%,#ed9017 100%);
+//     position: relative;
+// 	  border-image-slice: 1;
+//     &::after {
+//       position: fixed;
+//       top: -4px; bottom: -4px;
+//       left: -4px; right: -4px;
+//       background: linear-gradient(red, blue);
+//       content: '';
+//       z-index: -1;
+//       border-radius: 3px;
+//     }
+// 	}
