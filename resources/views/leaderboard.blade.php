@@ -6,8 +6,8 @@
     <div class="col-lg-3 col-md-4 col-sm-12">
       <img src="img/bonusly_header_logo_wht-1.png">
     </div>
-    <div class="col-lg-3 col-md-4 col-sm-12 pull-right">
-      <h2>Bonusly Recievers</h2>
+    <div class="col-lg-3 col-md-4 col-sm-12 pull-right" style="text-align: center;">
+      <h2>Bonusly Givers</h2>
     </div>
   </div>
 </div>
@@ -18,7 +18,6 @@
           <div class="progress">
             <label class="progress_label">{{ ucfirst($d->user->display_name) }}</label>
             <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="$d->percentage" aria-valuemin="0" aria-valuemax="100" style="width: {{ $d->percentage }}%;">
-              <span class="sr-only">{{ $d->percentage }}% Complete</span>
               {{ $d->percentage }}%
             </div>
           </div>
