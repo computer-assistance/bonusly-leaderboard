@@ -1,0 +1,161 @@
+body {
+  height: 100vh;
+  font-size: 3em!important;
+  background-color: #f5f8fa;
+  text-shadow: 0px 3px 2px rgb(30, 48, 10);
+}
+
+h2{
+}
+// $progress-bar-bg-color: blue;
+$progress-bar-bg-color: rgba(116, 188, 68, 0.75);
+
+.blue-green-overlay:before {
+  content: ' ';
+  background: linear-gradient(to bottom, #04a8d5 0%, #04a8d5 40%, #04cbd5 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04a8d5', endColorstr='#04cbd5', GradientType=0 );
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, #3c692f 0%, rgba(40, 126, 104, 0.8) 80%, rgba(73, 143, 126, 0.75) 100%);
+  background:linear-gradient(to bottom, #e57f0e 0%, rgba(180, 111, 7, 0.8) 80%, rgba(122, 88, 1, 0.75) 100%);
+  background: linear-gradient(to bottom, #3c692f 0%, rgba(89, 126, 40, 0.8) 80%, rgba(104, 143, 73, 0.75) 100%);
+}
+
+.et_pb_section {
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center;
+  -webkit-background-size: 100%;
+  -webkit-background-size: cover;
+  -moz-background-size: 100%;
+  -moz-background-size: cover;
+  background-size: 100%;
+  background-size: cover;
+}
+
+.progress_label{
+  color: #3097d1;
+  color: #336b8a;
+  padding-left: 20px;
+  position: relative;
+  // this adds a green chevron sticking into the white part of the progress bar
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    border-left: 7px solid;
+    border-left-color: $progress-bar-bg-color;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+  }
+}
+
+#leaderboard_title_bar {
+  padding-bottom: 2em;
+  padding-top: 2em;
+  height: 260px;
+  h2 {
+    color: #d8e2e6;
+    text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
+    font-size: 60px;
+    font-weight: 900;
+  }
+  .pull-right {
+    margin-right: 80px;
+  }
+  img {
+    // margin-right: 10px;
+  }
+}
+
+#leaderboard_bars {
+  text-shadow:   0px 1px 1px rgba(0, 0, 0, 0.6);
+  font-size: 1.3em;
+  font-weight: bolder;
+  .progress {
+    overflow: hidden;
+    height: 30px;
+    margin-bottom: 0;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.2);
+    line-height: 1.7;
+    .progress-bar {
+      position: relative;
+      padding: 0 1px;
+      line-height: 1.9;
+      background-color: $progress-bar-bg-color;
+      min-width: 10%;
+      font-size: .8em;
+      color: #2a4a60;
+      text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);
+
+      // this adds a white chevron sticking into the green pogress bar
+      // &:after {
+      //   content: "";
+      //   position: absolute;
+      //   left: 0;
+      //   bottom: 0;
+      //   width: 100%;
+      //   height: 0;
+      //   border-right: 7px solid #f5f5f5;
+      //   border-top: 15px solid transparent;
+      //   border-bottom: 15px solid transparent;
+      // }
+    }
+  }
+}
+
+#leaderboard_table {
+  color: #d8e2e6;
+  box-shadow: 0px 8px 5px 3px rgba(0, 0, 0, 0.25);
+  border: 6px solid;
+  font-weight: 900;
+  font-weight: 900;
+  border-radius: 45px;
+  .pic img {
+    border-radius: 30px;
+    height: 2em;
+    box-shadow: 0px 6px 10px #555;
+  }
+}
+
+.progress-bar-img img {
+  position: relative;
+  top: 28px;
+  right: 28px;
+  text-align: left;
+  height: 1.4em;
+  border-radius: 15px;
+}
+//
+// .box{
+//     margin: auto;
+// 	  background: #eee;
+// 	  border: 3px solid transparent;
+// 	  // -moz-border-image: -moz-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
+// 	  // -webkit-border-image: -webkit-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
+// 	  // border-image: linear-gradient(to bottom right, #3acfd5 0%, #3a4ed5 100%);
+//     border-image: linear-gradient(to bottom right, #f6e6b4 0%,#ed9017 100%);
+//     position: relative;
+// 	  border-image-slice: 1;
+//     &::after {
+//       position: fixed;
+//       top: -4px; bottom: -4px;
+//       left: -4px; right: -4px;
+//       background: linear-gradient(red, blue);
+//       content: '';
+//       z-index: -1;
+//       border-radius: 3px;
+//     }
+// 	}
+.container {
+    width: 1870px!important;
+}
