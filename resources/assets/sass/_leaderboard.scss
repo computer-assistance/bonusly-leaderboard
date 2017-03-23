@@ -36,7 +36,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 .progress_label{
   color: #3097d1;
   color: #336b8a;
-  padding-left: 10px;
+  padding-left: 20px;
   position: relative;
   // this adds a green chevron sticking into the white part of the progress bar
   &:before {
@@ -69,7 +69,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   .progress {
     overflow: hidden;
     height: 30px;
-    margin-bottom: 22px;
+    // margin-bottom: 22px;
     background-color: #f5f5f5;
     border-radius: 4px;
     box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.2);
@@ -79,7 +79,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
       padding: 0 1px;
       line-height: 1.9;
       background-color: $progress-bar-bg-color;
-      min-width: 3.5%;
+      min-width: 10%;
       font-size: .8em;
       color: #2a4a60;
       text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);

@@ -12,23 +12,58 @@ class BonuslyLeaderboardController extends Controller
   public function showBoard() {
 
 
-    if (!Cache::has('bonusData')) {
-      $data = new \stdClass;
+    if (!Cache::has('giverData') && !Cache::has('receiverData')) {
+
+      $userReceivedTotals = [];
+      $userGivenTotals = [];
 
 
-    $data = new \stdClass;
+      $giverData = $this->analyseData($this->makeBonuslyApiCall($resource = 'analytics', $id = null, $role = 'giver'));
 
-    $data1 = $this->makeBonuslyApiCall(); // testing
+      $receiverData = $this->analyseData($this->makeBonuslyApiCall($resource = 'analytics',$id = null, $role = 'receiver'));
 
-    $data = $this->analyseData($this->makeBonuslyApiCall());
+      // foreach ($receiverData as $key => $value) {
+      //   array_push($userReceivedTotals, $this->getUserReceipts($value->user->id));
+      // }
+      //
+      // // dd($userReceivedTotals);
+      //
+      // $sortedTotals = array();
+      //
+      // $keys = array_keys($userReceivedTotals);
 
-    $expiresAt = Carbon::now()->addMinutes(2);
-		Cache::put('data', $data, $expiresAt);
+      // dd($keys);
+      //
+      // foreach ($userReceivedTotals as $key => $row)
+      // {
+      //     $sortedTotals[$key] = $row['earnings'];
+      // }
+      // array_multisort($sortedTotals, SORT_DESC, $userReceivedTotals);
+
+      // dd($sortedTotals);
+
+      $users = $this->getUsers();
+
+      $sortedUsers = null;
+            foreach ($users as $key => $value) {
+              $v = array(&$value);
+              print_r( $v);
+              // array_push($sortedUsers, usort($v,array($this, "cmp")) );
+            }
+
+      // $sortedUsers = usort($users,array($this, "cmp"));
+      dd("sorted users $sortedUsers");
+      $expiresAt = Carbon::now()->addMinutes(0);
+
+      Cache::put('giverData', $giverData, $expiresAt);
+      Cache::put('receiverData', $receiverData, $expiresAt);
+      // dd($users); //, $receiverData);
     }
     else {
-      $data = Cache::get('data');
+      $giverData = Cache::get('giverData');
+      $receiverData = Cache::get('receiverData');
     }
-    return view('leaderboard', compact('data'));
+    return view('leaderboard', compact('giverData', 'receiverData'));
   }
 
   // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
@@ -36,37 +71,50 @@ class BonuslyLeaderboardController extends Controller
   // 'url' => 'http://monitor.wiseserve.net',
 
 
-  function makeBonuslyApiCall() {
+  function makeBonuslyApiCall($resource, $id = null, $role = null) {
 
+    $bonsulyApiCall = [];
+
+    switch ($resource) {
+      case 'users':
+        $url = 'https://bonus.ly/api/v1/users';
+        break;
+
+      case 'analytics':
+        $url = 'https://bonus.ly/api/v1/analytics/standouts';
+        break;
+
+      default:
+        # code...
+        break;
+    }
+
+
+    $res = new \stdClass;
     $browser = new \Buzz\Browser();
 
-    $bonsulyApiGiverCall = array(
-      'url'           => 'https://bonus.ly/api/v1/analytics/standouts',
-      'access_token'  => 'e288e7aadf0e48c1d0b3a5b84699e15a',
-      ''
-    );
+    $access_token = 'e288e7aadf0e48c1d0b3a5b84699e15a';
 
-    $bonsulyApiReceiverCall = array(
-      'url'           => 'https://bonus.ly/api/v1/analytics/standouts',
-      'access_token'  => 'e288e7aadf0e48c1d0b3a5b84699e15a',
-      'parameters'    => [ 'role' => 'receiver' ]
-    );
-
-    $url = $bonsulyApiGiverCall['url'];
-    $access_token = $bonsulyApiGiverCall['access_token'];
-    $parameters = $bonsulyApiReceiverCall['parameters'];
-
-    $apiUrl = $url.'?access_token='. $access_token . '&parameters={\'role\':\'receiver\'}' ;
+    if ($resource == 'users' && $id == null) {
+      $apiUrl = $url . '?access_token=' . $access_token . '&show_financial_data=true';
+    }
+    else if ($resource == 'users' && $id != null) {
+      $apiUrl = $url . '/' . $id . '/bonuses'. '?access_token=' . $access_token;
+    }
+    else {
+      $apiUrl = $url . '?access_token=' . $access_token . '&role=' . $role;
+    }
 
     $hostResponse = $browser->get($apiUrl, []);
     $content = json_decode($hostResponse->getContent());
-
+    // dd($content);
     $res = $content->result;
 
     return $res;
   }
 
   function analyseData($data) {
+
     $res = [];
     $hi = null;
     $values = [];
@@ -75,6 +123,7 @@ class BonuslyLeaderboardController extends Controller
     $percentages = [];
     $size = count($data);
     // dump($data);
+
     foreach ($data as $d) {
       if ($hi == null || $d->count > $hi) {
         $hi = $d->count;
@@ -82,6 +131,7 @@ class BonuslyLeaderboardController extends Controller
       $total+= $d->count;
       $count++;
     }
+
     foreach ($data as $key => $val) {
       $res2 = new \stdClass;
       $res2 = $val;
@@ -113,4 +163,27 @@ class BonuslyLeaderboardController extends Controller
   function getPrecent($numItems, $value) {
     return (int)(($value/$numItems)*100);
   }
+
+  function getUsers() {
+    return $this->makeBonuslyApiCall($resource = 'users');
+  }
+
+  function getUserData($id) {
+
+    $returnData = [];
+
+    return $this->makeBonuslyApiCall($resource = 'users', $id);
+      // $returnData['id'] = $user->id;
+      // $returnData['name'] = $user->display_name;
+      // $returnData['earnings'] = $user->earning_balance;
+
+      // dd($returnData);
+    return $returnData;
+  }
+
+  function cmp($a, $b)
+{
+  echo "$a";
+    return strcmp($a->earning_balance, $b->earning_balance);
+}
 }
