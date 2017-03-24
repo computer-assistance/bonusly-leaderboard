@@ -9,17 +9,9 @@ body {
   width: 1600px!important;
 }
 
-h2 {
-  // font-size: 72px;
-  background: -webkit-linear-gradient(#ffffff, #afafaf);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color:rgba(68, 177, 188, 0.58); // light blue
-  -webkit-text-fill-color: rgba(116, 188, 68, 0.37);
-  font-size: 3.6em!important;
-}
-
 // $progress-bar-bg-color: blue;
 $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
+$progress-bar-bg-color: rgba(193, 163, 20, 0.8);
 
 .blue-green-overlay:before {
   content: ' ';
@@ -53,12 +45,13 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   color: #336b8a;
   padding-left: 20px;
   position: relative;
+  top: -7px;
   // this adds a green chevron sticking into the white part of the progress bar
   &:before {
     content: "";
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 7px;
     width: 100%;
     height: 0;
     border-left: 7px solid;
@@ -73,11 +66,15 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   padding-top: 2em;
   height: 260px;
   h2 {
-    color: #d8e2e6;
     // text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5) // replaced by 3d text effect below
-    font-size: 60px;
+    color: rgba(0, 20, 34, 0.62);
+    background: -webkit-linear-gradient(#ffffff, #afafaf);
+    background: -webkit-linear-gradient(#336b8a, #04cad5);
+    -webkit-background-clip: text;
+    font-size: 3.6em!important;
     font-weight: 900;
     text-shadow: #bbbbbb 0px 1px 0px, #b5b5b5 0px 2px 0px, #9c9b9b 0px 3px 0px, #888787 0px 4px 0px, #5d5c5c 0px 5px 0px, #3a3939 0px 6px 0px, rgba(0, 0, 0, 0.55) 0px 7px 1px, rgba(0, 0, 0, 0.296875) 0px 8px 6px;
+    text-shadow: 0px 5px 7px rgba(1, 1, 1, 0.24);
   }
   .pull-right {
     // margin-right: 80px;
@@ -102,9 +99,9 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
     .progress-bar {
       position: relative;
       padding: 0 1px;
-      line-height: 1.9;
+      line-height: 1.3;
       background-color: $progress-bar-bg-color;
-      min-width: 10%;
+      // min-width: 10%;
       font-size: .8em;
       color: #2a4a60;
       text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);
@@ -125,7 +122,8 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   }
 }
 
-#leaderboard_table {
+.leaderboard_table {
+  margin-top: 50px;
   color: #d8e2e6;
   box-shadow: 0px 8px 5px 3px rgba(0, 0, 0, 0.25);
   border: 6px solid;
@@ -141,8 +139,8 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 
 .progress-bar-img img {
   position: relative;
-  top: 28px;
-  right: 28px;
+  top: 35px;
+  right: 45px;
   text-align: left;
   height: 1.4em;
   border-radius: 15px;

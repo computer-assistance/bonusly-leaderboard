@@ -72,10 +72,10 @@ class BonuslyLeaderboardController extends Controller
       return $b->earning_balance - $a->earning_balance;
       });
 
-      // dd ($givenTotal, $giverPointsData, $receivedTotal, $receiverPointsData);
 
       $giverPointsData = array_slice($giverPointsData,0, 10);
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
+      // dd ($giverPointsData, $receiverPointsData);
 
       $expiresAt = Carbon::now()->addMinutes(10);
 
