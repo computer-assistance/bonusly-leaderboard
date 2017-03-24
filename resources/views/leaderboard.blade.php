@@ -47,7 +47,7 @@
 
 
 
-<div class="container">
+<div id="tables" class="container">
   <div class="row">
     <div id="" class="col-lg-4 col-lg-offset-1">
       <div class="leaderboard_table">
