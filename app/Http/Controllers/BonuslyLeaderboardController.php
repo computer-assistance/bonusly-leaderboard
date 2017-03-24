@@ -17,48 +17,41 @@ class BonuslyLeaderboardController extends Controller
       $givenTotal = 0;
       $receivedTotal = 0;
 
-
-      $giverData = $this->analyseData($this->makeBonuslyApiCall($resource = 'analytics', $id = null, $role = 'giver'));
-
-      $receiverData = $this->analyseData($this->makeBonuslyApiCall($resource = 'analytics',$id = null, $role = 'receiver'));
-
       $users = $this->getUsers();
-      $giverPointsData = [];
 
+      $giverPointsData = [];
       $receiverPointsData = [];
-      $receiverPercentages = [];
 
       $count = count($users) -1; // Welcome user is not counted as ignored in later code c.line 50
 
-      foreach ($users as $key => $value) {
-        if ($value->display_name != 'Welcome') {
-          $givenTotal += $this->sumPoints($value, 'giving_balance');
-          $receivedTotal += $this->sumPoints($value, 'earning_balance');
+      foreach ($users as $user) {
+        if ($user->display_name != 'Welcome') {
+          $givenTotal += $this->sumPoints($user, 'giving_balance');
+          $receivedTotal += $this->sumPoints($user, 'earning_balance');
         }
       }
 
-      foreach ($users as $key => $value) {
-        if($value->display_name != 'Welcome') {
-          $giverPointsLoopData['id'] = $value->id;
-          $giverPointsLoopData['profile_pic_url'] = $value->profile_pic_url;
-          $giverPointsLoopData['display_name'] = ucfirst($value->display_name);
-          $giverPointsLoopData['giving_balance'] =  100 - $value->giving_balance;
-          $giverPointsLoopData['giver_percentage'] =  (int)(((100 - $value->giving_balance)/$givenTotal) * 100) ;
+      foreach ($users as $user) {
 
-          array_push($giverPointsData, (object)$giverPointsLoopData);
+        $giverPointsLoopData = new \stdClass;
+        $receiverPointsLoopData = new \stdClass;
 
-          // $givenTotal += $giverPointsLoopData['giving_balance'];
+        if($user->display_name != 'Welcome') {
+          $giverPointsLoopData->id = $user->id;
+          $giverPointsLoopData->profile_pic_url = $user->profile_pic_url;
+          $giverPointsLoopData->display_name = ucfirst($user->display_name);
+          $giverPointsLoopData->giving_balance =  100 - $user->giving_balance;
+          $giverPointsLoopData->giver_percentage =  (int)(((100 - $user->giving_balance)/$givenTotal) * 100) ;
 
-          $receiverPointsLoopData['id'] = $value->id;
-          $receiverPointsLoopData['profile_pic_url'] = $value->profile_pic_url;
-          $receiverPointsLoopData['display_name'] = ucfirst($value->display_name);
-          $receiverPointsLoopData['earning_balance'] = $value->earning_balance;
-          $receiverPointsLoopData['receiver_percentage'] =  (int)(($value->earning_balance/$receivedTotal) * 100) ;
+          array_push($giverPointsData, $giverPointsLoopData);
 
+          $receiverPointsLoopData->id = $user->id;
+          $receiverPointsLoopData->profile_pic_url = $user->profile_pic_url;
+          $receiverPointsLoopData->display_name = ucfirst($user->display_name);
+          $receiverPointsLoopData->earning_balance = $user->earning_balance;
+          $receiverPointsLoopData->receiver_percentage =  (int)(($user->earning_balance/$receivedTotal) * 100) ;
 
-          array_push($receiverPointsData, (object)$receiverPointsLoopData);
-
-          // $receivedTotal += $receiverPointsLoopData['earning_balance'];
+          array_push($receiverPointsData, $receiverPointsLoopData);
         }
       }
 
@@ -72,10 +65,8 @@ class BonuslyLeaderboardController extends Controller
       return $b->earning_balance - $a->earning_balance;
       });
 
-
       $giverPointsData = array_slice($giverPointsData,0, 10);
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
-      // dd ($giverPointsData, $receiverPointsData);
 
       $expiresAt = Carbon::now()->addMinutes(10);
 
@@ -95,36 +86,28 @@ class BonuslyLeaderboardController extends Controller
   // 'url' => 'http://monitor.wiseserve.net',
 
   function sumPoints($data, $prop) {
-
     $temp = null;
 
     switch ($prop) {
       case 'giving_balance':
 
-      foreach ($data as $key => $value) {
-        if($key == $prop) {
-          if ($value > 100) {
-            $value = 100;
+        // dd($data->giving_balance, $prop);
+          if ($data->giving_balance > 100) {
+            $data->giving_balance = 100;
           }
-          if ($value < 0) {
-            $value = 0;
+          if ($data->giving_balance < 0) {
+            $data->giving_balance = 0;
           }
-          $temp += (100 - $value);
-        }
-      }
+          $temp += (100 - $data->giving_balance);
       return $temp;
       break;
 
       case 'earning_balance':
 
-      foreach ($data as $key => $value) {
-        if($key == $prop) {
-          if ($value < 0) {
-            $value = 0;
+          if ($data->earning_balance < 0) {
+            $data->earning_balance = 0;
           }
-          $temp += $value;
-        }
-      }
+          $temp += $data->earning_balance;
       return $temp;
       break;
 
@@ -176,139 +159,9 @@ class BonuslyLeaderboardController extends Controller
     return $res;
   }
 
-  function analyseData($data) {
-
-    if(!is_object($data)) {
-      $data = (object)$data;
-    }
-
-    $res = [];
-    $hi = null;
-    $values = [];
-    $count = 0;
-    $total = 0;
-    $percentages = [];
-    $size = count($data);
-
-    foreach ($data as $d) {
-      if ($hi == null || $d->count > $hi) {
-        $hi = $d->count;
-      }
-      $total+= $d->count;
-      $count++;
-    }
-
-    foreach ($data as $key => $val) {
-      $res2 = new \stdClass;
-      $res2 = $val;
-      $res2->percentage = $this->getPercent($total, $val->count);
-      array_push($values, $val->count);
-      array_push($res, $res2);
-    }
-
-    $res = (object)$res;
-
-    // $res->percentages = $this->getPercentages($total, $values);
-
-    // $res->hi = $hi;
-    // $res->count = $count;
-    // $res->percentages = $values;
-    // $res->total = $total;
-    return (array)$res;
-  }
-
-//   function analyseUserData($data, $type) {
-//
-//     switch ($type) {
-//       case 'giver':
-//       $k ='giving_balance';
-//         break;
-//
-//       case 'receiver':
-//       $k ='earning_balance';
-//         break;
-//
-//       default:
-//         # code...
-//         break;
-//     }
-//
-//     // if(!is_object($data)) {
-//     //   $data = (object)$data;
-//     // }
-//
-//     $res = [];
-//     $hi = null;
-//     $values = [];
-//     $count = 0;
-//     $count2 = 0;
-//     $total = 0;
-//     $percentages = [];
-//     $size = count($data);
-//     var_dump($data);
-//     foreach ($data as $type => $v) {
-//       $count2++;
-//     }
-//
-//     echo "num arrays = $count2 \n";
-//
-//     foreach ($data as $d) {
-//       foreach ($d as $k => $v) {
-//         echo $v . "\n";
-//         if ($hi == null || $v > $hi) {
-//           $hi = $v;
-//         }
-//         $total+= $v;
-//         $count++;
-//       }
-//     }
-//     die;
-//
-//     foreach ($data as $d) {
-//       $res2 = new \stdClass;
-//       $res2 = $d;
-//       foreach ($d as $k => $v) {
-//         if ($hi == null || $v > $hi) {
-//           $hi = $v;
-//         }
-//       $res2->percentage = $this->getPercent($total, $val->$k);
-//       array_push($values, $val->$k);
-//       array_push($res, $res2);
-//     }
-//
-//     $res = (object)$res;
-//
-//     // $res->percentages = $this->getPercentages($total, $values);
-//
-//     // $res->hi = $hi;
-//     // $res->count = $count;
-//     // $res->percentages = $values;
-//     // $res->total = $total;
-//     return (array)$res;
-//   }
-// }
-
-  function getPercentages($total, $data) {
-    $ret = [];
-    foreach ($data as $key => $value) {
-      foreach ($value as $k => $v) {
-        echo $k . '<k | v>' . $v ."|\n";
-      }
-      // array_push($ret, (int)(($value/$total)*100));
-    }
-    return $ret;
-  }
-
-  function getPercent($numItems, $value) {
-    return (int)(($value/$numItems)*100);
-  }
-
   function getUsers() {
     return $this->makeBonuslyApiCall($resource = 'users');
   }
 
-  function getUserData($id) {
-    return $this->makeBonuslyApiCall($resource = 'users', $id);
-  }
 
 }
