@@ -63,19 +63,27 @@ $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
 
 #leaderboard_title_bar {
   padding-top: 2em;
-  h2 {
+  h2, h3 {
     // text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5) // replaced by 3d text effect below
     color: rgba(0, 20, 34, 0.62);
     background: -webkit-linear-gradient(#ffffff, #afafaf);
     background: -webkit-linear-gradient(#336b8a, #04cad5);
     color: rgba(255, 255, 255, 0.51);
     background: -webkit-linear-gradient(#ffffff, #afafaf);
-    background: -webkit-linear-gradient(#d1d3d4, #426e33);
+    background: -webkit-linear-gradient(top, #d8e2e6 0%, #dadada 40%, #3f6b30 100%);
     -webkit-background-clip: text;
+    text-shadow: #bbbbbb 0px 1px 0px, #b5b5b5 0px 2px 0px, #9c9b9b 0px 3px 0px, #888787 0px 4px 0px, #5d5c5c 0px 5px 0px, #3a3939 0px 6px 0px, rgba(0, 0, 0, 0.55) 0px 7px 1px, rgba(0, 0, 0, 0.296875) 0px 8px 6px;
+    text-shadow: 0px 3px 5px rgba(1, 1, 1, 0.24);
+  }
+  h2{
     font-size: 3.6em!important;
     font-weight: 900;
-    text-shadow: #bbbbbb 0px 1px 0px, #b5b5b5 0px 2px 0px, #9c9b9b 0px 3px 0px, #888787 0px 4px 0px, #5d5c5c 0px 5px 0px, #3a3939 0px 6px 0px, rgba(0, 0, 0, 0.55) 0px 7px 1px, rgba(0, 0, 0, 0.296875) 0px 8px 6px;
-    text-shadow: 0px 5px 7px rgba(1, 1, 1, 0.24);
+  }
+  h3 {
+    margin: 0;
+    color: #cbb341;
+    font-weight: 500;
+    text-shadow: 0px 5px 7px rgba(1, 1, 1, 0.84);
   }
   .pull-right {
     // margin-right: 80px;

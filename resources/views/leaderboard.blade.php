@@ -4,14 +4,17 @@
 <div id="leaderboard_title_bar" class="container">
   <div class="row">
     <div class="col-sm-12">
-      <img src="img/bonusly_header_logo_wht-1.png">
-      <img src="img/Computer-Assistance-aifile_white_300x89.png" class="pull-right">
+      <img src="img/bonusly_header_logo_wht-1_grad_green2.png">
+      <img src="img/Computer-Assistance-aifile_white_300x89_grad_green2.png" class="pull-right">
     </div>
     <div class="col-lg-4 col-lg-offset-" style="text-align: center;">
       <h2 class="my_title">Givers</h2>
+      <h3>Total {{ $givenTotal }} points </h3>
     </div>
     <div class="col-lg-5 col-lg-offset-3" style="text-align: center;">
-      <h2>Recievers</h2>
+      <h2 class="my_title">Recievers</h2>
+      <h3>Total {{ $receivedTotal }} points </h3>
+
     </div>
   </div>
 </div>

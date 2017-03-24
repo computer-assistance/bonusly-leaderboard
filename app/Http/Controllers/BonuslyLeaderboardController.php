@@ -78,7 +78,7 @@ class BonuslyLeaderboardController extends Controller
       $receiverPointsData = Cache::get('receiverPointsData');
     }
 
-    return view('leaderboard', compact('giverPointsData', 'receiverPointsData'));
+    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal'));
   }
 
   // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
