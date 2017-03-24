@@ -9,12 +9,8 @@ use Illuminate\Http\Request;
 
 class BonuslyLeaderboardController extends Controller
 {
-  function titlecmp($a, $b) {
-  //  dd($b->display_name);
-    return $b->giving_balance - $a->giving_balance;
-  }
-  public function showBoard() {
 
+  public function showBoard() {
 
     if (!Cache::has('giverData') && !Cache::has('receiverData')) {
 
@@ -27,17 +23,19 @@ class BonuslyLeaderboardController extends Controller
       $receiverData = $this->analyseData($this->makeBonuslyApiCall($resource = 'analytics',$id = null, $role = 'receiver'));
 
       $users = $this->getUsers();
-
       $giverPointsData = [];
-      $giverPointsDataSorted = [];
 
       $receiverPointsData = [];
-      $receiverPointsDataSorted =[];
+      $receiverPercentages = [];
 
-      $count = null;
+      $count = count($users) -1; // Welcome user is not counted as ignored in later code c.line 50
 
-      $givenTotal = null;
-      $receivedTotal = null;
+      foreach ($users as $key => $value) {
+        if ($value->display_name != 'Welcome') {
+          $givenTotal += $this->sumPoints($value, 'giving_balance');
+          $receivedTotal += $this->sumPoints($value, 'earning_balance');
+        }
+      }
 
       foreach ($users as $key => $value) {
         if($value->display_name != 'Welcome') {
@@ -45,21 +43,22 @@ class BonuslyLeaderboardController extends Controller
           $giverPointsLoopData['profile_pic_url'] = $value->profile_pic_url;
           $giverPointsLoopData['display_name'] = ucfirst($value->display_name);
           $giverPointsLoopData['giving_balance'] =  100 - $value->giving_balance;
+          $giverPointsLoopData['giver_percentage'] =  (int)(((100 - $value->giving_balance)/$givenTotal) * 100) ;
 
           array_push($giverPointsData, (object)$giverPointsLoopData);
 
-          $givenTotal += $giverPointsLoopData['giving_balance'];
+          // $givenTotal += $giverPointsLoopData['giving_balance'];
 
           $receiverPointsLoopData['id'] = $value->id;
           $receiverPointsLoopData['profile_pic_url'] = $value->profile_pic_url;
           $receiverPointsLoopData['display_name'] = ucfirst($value->display_name);
           $receiverPointsLoopData['earning_balance'] = $value->earning_balance;
+          $receiverPointsLoopData['receiver_percentage'] =  (int)(($value->earning_balance/$receivedTotal) * 100) ;
+
 
           array_push($receiverPointsData, (object)$receiverPointsLoopData);
 
-          $receivedTotal += $receiverPointsLoopData['earning_balance'];
-
-          $count++;
+          // $receivedTotal += $receiverPointsLoopData['earning_balance'];
         }
       }
 
@@ -72,6 +71,8 @@ class BonuslyLeaderboardController extends Controller
       {
       return $b->earning_balance - $a->earning_balance;
       });
+
+      // dd ($givenTotal, $giverPointsData, $receivedTotal, $receiverPointsData);
 
       $giverPointsData = array_slice($giverPointsData,0, 10);
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
@@ -93,6 +94,45 @@ class BonuslyLeaderboardController extends Controller
 
   // 'url' => 'http://monitor.wiseserve.net',
 
+  function sumPoints($data, $prop) {
+
+    $temp = null;
+
+    switch ($prop) {
+      case 'giving_balance':
+
+      foreach ($data as $key => $value) {
+        if($key == $prop) {
+          if ($value > 100) {
+            $value = 100;
+          }
+          if ($value < 0) {
+            $value = 0;
+          }
+          $temp += (100 - $value);
+        }
+      }
+      return $temp;
+      break;
+
+      case 'earning_balance':
+
+      foreach ($data as $key => $value) {
+        if($key == $prop) {
+          if ($value < 0) {
+            $value = 0;
+          }
+          $temp += $value;
+        }
+      }
+      return $temp;
+      break;
+
+      default:
+      # code...
+      break;
+    }
+  }
 
   function makeBonuslyApiCall($resource, $id = null, $role = null) {
 
@@ -130,7 +170,7 @@ class BonuslyLeaderboardController extends Controller
 
     $hostResponse = $browser->get($apiUrl, []);
     $content = json_decode($hostResponse->getContent());
-    // dd($content);
+
     $res = $content->result;
 
     return $res;
@@ -269,39 +309,6 @@ class BonuslyLeaderboardController extends Controller
 
   function getUserData($id) {
     return $this->makeBonuslyApiCall($resource = 'users', $id);
-  }
-
-function array_sort($array, $on, $order=SORT_ASC) {
-    $new_array = array();
-    $sortable_array = array();
-
-    if (count($array) > 0) {
-        foreach ($array as $k => $v) {
-            if (is_array($v)) {
-                foreach ($v as $k2 => $v2) {
-                    if ($k2 == $on) {
-                        $sortable_array[$k] = $v2;
-                    }
-                }
-            } else {
-                $sortable_array[$k] = $v;
-            }
-        }
-
-        switch ($order) {
-            case SORT_ASC:
-                asort($sortable_array);
-            break;
-            case SORT_DESC:
-                arsort($sortable_array);
-            break;
-        }
-
-        foreach ($sortable_array as $k => $v) {
-            $new_array[$k] = $array[$k];
-        }
-        return $new_array;
-    }
   }
 
 }
