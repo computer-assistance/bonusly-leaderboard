@@ -17,47 +17,79 @@ class BonuslyLeaderboardController extends Controller
       $givenTotal = 0;
       $receivedTotal = 0;
 
+      $earners = [];
+
       $users = $this->getUsers();
 
       $giverPointsData = [];
       $receiverPointsData = [];
+      $highestGiverPoints = 0;
+      $highestReceiverPoints = 0;
 
-      $count = count($users) -1; // Welcome user is not counted as ignored in later code c.line 50
-
+      $index = 0;
       foreach ($users as $user) {
         if ($user->display_name != 'Welcome') {
+          $highestGiverPoints = $this->getTheHighest((100 - $user->giving_balance), $highestGiverPoints);
+          $highestReceiverPoints = $this->getTheHighest(($user->earning_balance), $highestReceiverPoints);
           $givenTotal += $this->sumPoints($user, 'giving_balance');
           $receivedTotal += $this->sumPoints($user, 'earning_balance');
         }
-      }
-
-      foreach ($users as $user) {
-
-        $giverPointsLoopData = new \stdClass;
-        $receiverPointsLoopData = new \stdClass;
-
-        if($user->display_name != 'Welcome') {
-          $giverPointsLoopData->id = $user->id;
-          $giverPointsLoopData->profile_pic_url = $user->profile_pic_url;
-          $giverPointsLoopData->display_name = ucfirst($user->display_name);
-          $giverPointsLoopData->giving_balance =  100 - $user->giving_balance;
-          $giverPointsLoopData->giver_percentage =  (int)(((100 - $user->giving_balance)/$givenTotal) * 100) ;
-
-          array_push($giverPointsData, $giverPointsLoopData);
-
-          $receiverPointsLoopData->id = $user->id;
-          $receiverPointsLoopData->profile_pic_url = $user->profile_pic_url;
-          $receiverPointsLoopData->display_name = ucfirst($user->display_name);
-          $receiverPointsLoopData->earning_balance = $user->earning_balance;
-          $receiverPointsLoopData->receiver_percentage =  (int)(($user->earning_balance/$receivedTotal) * 100) ;
-
-          array_push($receiverPointsData, $receiverPointsLoopData);
+        else {
+          unset($users[$index]);
         }
+        $index++;
       }
+
+      // dd($highestReceiverPoints);
+      /* the main sub-routine
+      *
+      * loop through returned collection to create 2 arrays of specific data
+      *
+      *
+      */
+       $giverPointsData = $users;
+       $receiverPointsData = $users;
+
+      // foreach ($users as $user) {
+      //
+      //   $giverPointsLoopData = new \stdClass;
+      //   $receiverPointsLoopData = new \stdClass;
+      //
+      //   if($user->display_name != 'Welcome') {
+      //     $giverPointsLoopData->id = $user->id;
+      //     $giverPointsLoopData->profile_pic_url = $user->profile_pic_url;
+      //     $giverPointsLoopData->display_name = ucfirst($user->display_name);
+      //     $giverPointsLoopData->giving_balance =  100 - $user->giving_balance;
+      //     $giverPointsLoopData->giver_percentage =  (int)(((100 - $user->giving_balance)/$givenTotal) * 100) ;
+      //
+      //     array_push($giverPointsData, $giverPointsLoopData);
+      //
+      //     $receiverPointsLoopData->id = $user->id;
+      //     $receiverPointsLoopData->profile_pic_url = $user->profile_pic_url;
+      //     $receiverPointsLoopData->display_name = ucfirst($user->display_name);
+      //     $receiverPointsLoopData->earning_balance = $user->earning_balance;
+      //     $receiverPointsLoopData->receiver_percentage =  (int)(($user->earning_balance/$receivedTotal) * 100) ;
+      //
+      //     array_push($receiverPointsData, $receiverPointsLoopData);
+      //   }
+      // }
+
+      // dump('eranersb4->', $earners);
+      // usort($earners, function($a, $b)
+      // {
+      //     return strcmp($b->earning_balance, $a->earning_balance);
+      // });
+      //
+      //
+      // usort($giverPointsData, function($a, $b)
+      // {
+      //     return $b->giving_balance - $a->giving_balance;
+      // });
+
 
       usort($giverPointsData, function($a, $b)
       {
-          return $b->giving_balance - $a->giving_balance;
+      return $a->giving_balance - $b->giving_balance;
       });
 
       usort($receiverPointsData, function($a, $b)
@@ -65,25 +97,29 @@ class BonuslyLeaderboardController extends Controller
       return $b->earning_balance - $a->earning_balance;
       });
 
-      $giverPointsData = array_slice($giverPointsData,0, 10);
+      $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
+      $divisor = 0;
+      $divisor = $this->getTheHighest($highestReceiverPoints, $highestGiverPoints);
+      // dd($giverPointsData, $receiverPointsData);
 
       $expiresAt = Carbon::now()->addMinutes(10);
 
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
+      Cache::put('givenTotal', $givenTotal, $expiresAt);
+      Cache::put('receivedTotal', $receivedTotal, $expiresAt);
     }
     else {
       $giverPointsData = Cache::get('giverPointsData');
       $receiverPointsData = Cache::get('receiverPointsData');
+      $givenTotal = Cache::get('givenTotal');
+      $receivedTotal = Cache::get('receivedTotal');
     }
 
-    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal'));
+    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'highestGiverPoints', 'highestReceiverPoints', 'divisor'));
   }
 
-  // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
-
-  // 'url' => 'http://monitor.wiseserve.net',
 
   function sumPoints($data, $prop) {
     $temp = null;
@@ -98,7 +134,8 @@ class BonuslyLeaderboardController extends Controller
           if ($data->giving_balance < 0) {
             $data->giving_balance = 0;
           }
-          $temp += (100 - $data->giving_balance);
+          // echo "d->gb -> $data->giving_balance ,calc-> ";
+          // echo (100 - $data->giving_balance);
       return $temp;
       break;
 
@@ -117,39 +154,28 @@ class BonuslyLeaderboardController extends Controller
     }
   }
 
-  function makeBonuslyApiCall($resource, $id = null, $role = null) {
+  function getTheHighest($dataToCompare, $highestSoFar) {
+    if ($dataToCompare > $highestSoFar)
+      return $dataToCompare;
+    else {
+      return $highestSoFar;
+    }
+  }
+
+  function makeBonuslyApiCall() {
+
+    // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
 
     $bonsulyApiCall = [];
 
-    switch ($resource) {
-      case 'users':
-        $url = 'https://bonus.ly/api/v1/users';
-        break;
-
-      case 'analytics':
-        $url = 'https://bonus.ly/api/v1/analytics/standouts';
-        break;
-
-      default:
-        # code...
-        break;
-    }
-
+    $url = 'https://bonus.ly/api/v1/users';
 
     $res = new \stdClass;
     $browser = new \Buzz\Browser();
 
     $access_token = 'e288e7aadf0e48c1d0b3a5b84699e15a';
 
-    if ($resource == 'users' && $id == null) {
-      $apiUrl = $url . '?access_token=' . $access_token . '&show_financial_data=true';
-    }
-    else if ($resource == 'users' && $id != null) {
-      $apiUrl = $url . '/' . $id . '/bonuses'. '?access_token=' . $access_token;
-    }
-    else {
-      $apiUrl = $url . '?access_token=' . $access_token . '&role=' . $role;
-    }
+    $apiUrl = $url . '?access_token=' . $access_token . '&show_financial_data=true';
 
     $hostResponse = $browser->get($apiUrl, []);
     $content = json_decode($hostResponse->getContent());
@@ -160,7 +186,7 @@ class BonuslyLeaderboardController extends Controller
   }
 
   function getUsers() {
-    return $this->makeBonuslyApiCall($resource = 'users');
+    return $this->makeBonuslyApiCall();
   }
 
 

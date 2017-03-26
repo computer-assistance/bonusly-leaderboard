@@ -12,6 +12,10 @@ body {
 // $progress-bar-bg-color: blue;
 $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
+$progress-bar-bg-color: rgba(255, 211, 0, 0.8);
+
+$progress-label-color: #3097d1;
+$progress-label-color: #177eb8;
 
 .blue-green-overlay:before {
   content: ' ';
@@ -41,8 +45,8 @@ $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
 }
 
 .progress_label{
-  color: #3097d1;
-  color: #336b8a;
+  color: $progress-label-color;
+  // color: #336b8a;
   padding-left: 20px;
   position: relative;
   top: -7px;
@@ -97,7 +101,7 @@ $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
   }
 }
 
-#leaderboard_bars {
+.leaderboard_bars {
   text-shadow:   0px 1px 1px rgba(0, 0, 0, 0.6);
   font-size: 1.3em;
   font-weight: bolder;
@@ -105,9 +109,9 @@ $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
     overflow: hidden;
     height: 30px;
     margin-bottom: -5px;
-    background-color: #f5f5f5;
+    background: none;
     border-radius: 4px;
-    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
     line-height: 1.7;
     .progress-bar {
       position: relative;
@@ -116,8 +120,18 @@ $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
       background-color: $progress-bar-bg-color;
       min-width: 4%;
       font-size: .8em;
-      color: #2a4a60;
+      color: $progress-label-color - 25%;
       text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);
+      &:after{
+        content: ' ';
+        box-shadow: 2px 2px 2px 2px #000;
+        position: relative;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+      }
 
 
 
