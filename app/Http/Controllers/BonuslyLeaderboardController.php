@@ -12,7 +12,7 @@ class BonuslyLeaderboardController extends Controller
 
   public function showBoard() {
 
-    if (!Cache::has('giverData') && !Cache::has('receiverData')) {
+    if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) {
 
       $givenTotal = 0;
       $receivedTotal = 0;
@@ -109,15 +109,18 @@ class BonuslyLeaderboardController extends Controller
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('givenTotal', $givenTotal, $expiresAt);
       Cache::put('receivedTotal', $receivedTotal, $expiresAt);
+      Cache::put('divisor', $divisor, $expiresAt);
     }
     else {
       $giverPointsData = Cache::get('giverPointsData');
       $receiverPointsData = Cache::get('receiverPointsData');
       $givenTotal = Cache::get('givenTotal');
       $receivedTotal = Cache::get('receivedTotal');
+      $divisor = Cache::get('divisor');
+
     }
 
-    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'highestGiverPoints', 'highestReceiverPoints', 'divisor'));
+    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor'));
   }
 
 
