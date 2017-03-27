@@ -17,22 +17,20 @@ class BonuslyLeaderboardController extends Controller
       $givenTotal = 0;
       $receivedTotal = 0;
 
-      $earners = [];
-
-      $users = $this->getUsers();
-
       $giverPointsData = [];
       $receiverPointsData = [];
       $highestGiverPoints = 0;
       $highestReceiverPoints = 0;
 
+      $users = $this->getUsers();
       $index = 0;
+
       foreach ($users as $user) {
-        if ($user->display_name != 'Welcome') {
+        if ($user->display_name != 'Welcome') { // remove this user otherwise results are out by 100,000
           $highestGiverPoints = $this->getTheHighest((100 - $user->giving_balance), $highestGiverPoints);
           $highestReceiverPoints = $this->getTheHighest(($user->earning_balance), $highestReceiverPoints);
-          $givenTotal += $this->sumPoints($user, 'giving_balance');
-          $receivedTotal += $this->sumPoints($user, 'earning_balance');
+          $givenTotal += $this->sanitisePoints($user, 'giving_balance');
+          $receivedTotal += $this->sanitisePoints($user, 'earning_balance');
         }
         else {
           unset($users[$index]);
@@ -40,51 +38,8 @@ class BonuslyLeaderboardController extends Controller
         $index++;
       }
 
-      // dd($highestReceiverPoints);
-      /* the main sub-routine
-      *
-      * loop through returned collection to create 2 arrays of specific data
-      *
-      *
-      */
-       $giverPointsData = $users;
-       $receiverPointsData = $users;
-
-      // foreach ($users as $user) {
-      //
-      //   $giverPointsLoopData = new \stdClass;
-      //   $receiverPointsLoopData = new \stdClass;
-      //
-      //   if($user->display_name != 'Welcome') {
-      //     $giverPointsLoopData->id = $user->id;
-      //     $giverPointsLoopData->profile_pic_url = $user->profile_pic_url;
-      //     $giverPointsLoopData->display_name = ucfirst($user->display_name);
-      //     $giverPointsLoopData->giving_balance =  100 - $user->giving_balance;
-      //     $giverPointsLoopData->giver_percentage =  (int)(((100 - $user->giving_balance)/$givenTotal) * 100) ;
-      //
-      //     array_push($giverPointsData, $giverPointsLoopData);
-      //
-      //     $receiverPointsLoopData->id = $user->id;
-      //     $receiverPointsLoopData->profile_pic_url = $user->profile_pic_url;
-      //     $receiverPointsLoopData->display_name = ucfirst($user->display_name);
-      //     $receiverPointsLoopData->earning_balance = $user->earning_balance;
-      //     $receiverPointsLoopData->receiver_percentage =  (int)(($user->earning_balance/$receivedTotal) * 100) ;
-      //
-      //     array_push($receiverPointsData, $receiverPointsLoopData);
-      //   }
-      // }
-
-      // dump('eranersb4->', $earners);
-      // usort($earners, function($a, $b)
-      // {
-      //     return strcmp($b->earning_balance, $a->earning_balance);
-      // });
-      //
-      //
-      // usort($giverPointsData, function($a, $b)
-      // {
-      //     return $b->giving_balance - $a->giving_balance;
-      // });
+      $giverPointsData = $users;
+      $receiverPointsData = $users;
 
 
       usort($giverPointsData, function($a, $b)
@@ -124,31 +79,26 @@ class BonuslyLeaderboardController extends Controller
   }
 
 
-  function sumPoints($data, $prop) {
-    $temp = null;
+  function sanitisePoints($data, $prop) {
 
     switch ($prop) {
       case 'giving_balance':
 
-        // dd($data->giving_balance, $prop);
-          if ($data->giving_balance > 100) {
-            $data->giving_balance = 100;
-          }
-          if ($data->giving_balance < 0) {
-            $data->giving_balance = 0;
-          }
-          // echo "d->gb -> $data->giving_balance ,calc-> ";
-          // echo (100 - $data->giving_balance);
-      return $temp;
+        if ($data->giving_balance > 100) {
+          $data->giving_balance = 100;
+        }
+        if ($data->giving_balance < 0) {
+          $data->giving_balance = 0;
+        }
+      return $data->giving_balance;
       break;
 
       case 'earning_balance':
 
-          if ($data->earning_balance < 0) {
-            $data->earning_balance = 0;
-          }
-          $temp += $data->earning_balance;
-      return $temp;
+        if ($data->earning_balance < 0) {
+          $data->earning_balance = 0;
+        }
+        return $data->earning_balance;
       break;
 
       default:
