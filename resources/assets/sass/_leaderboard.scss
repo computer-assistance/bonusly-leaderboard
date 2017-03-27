@@ -6,16 +6,20 @@ body {
 }
 
 .container {
-  width: 1600px!important;
+  width: 1570px!important;
 }
 
 // $progress-bar-bg-color: blue;
 $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 $progress-bar-bg-color: rgba(193, 163, 20, 0.8);
 $progress-bar-bg-color: rgba(255, 211, 0, 0.8);
+$progress-bar-bg-color: rgb(249, 216, 54);
+
+
 
 $progress-label-color: #3097d1;
 $progress-label-color: #177eb8;
+$progress-label-color: #21aaf7;
 
 .blue-green-overlay:before {
   content: ' ';
@@ -49,24 +53,25 @@ $progress-label-color: #177eb8;
   // color: #336b8a;
   padding-left: 20px;
   position: relative;
-  top: -7px;
+  top: -17px;
   // this adds a green chevron sticking into the white part of the progress bar
   &:before {
     content: "";
     position: absolute;
-    left: 0;
-    bottom: 7px;
+    left: -2px;
+    bottom: 6px;
     width: 100%;
     height: 0;
-    border-left: 7px solid;
-    border-left-color: $progress-bar-bg-color;
-    border-top: 15px solid transparent;
+    border-left: 11px solid;
+    border-left-color: #f9d836;
+    border-top: 17px solid transparent;
     border-bottom: 15px solid transparent;
+    border-radius: 3px;
   }
 }
 
 #leaderboard_title_bar {
-  padding-top: 2em;
+  padding-top: 1em;
   h2, h3 {
     // text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5) // replaced by 3d text effect below
     color: rgba(0, 20, 34, 0.62);
@@ -83,7 +88,7 @@ $progress-label-color: #177eb8;
   h2 {
     font-size: 3.6em!important;
     font-weight: 900;
-    margin: 0;
+    // margin: 0;
     // font-size: 1.5em;
   }
   h3 {
@@ -107,33 +112,25 @@ $progress-label-color: #177eb8;
   font-weight: bolder;
   .progress {
     overflow: hidden;
-    height: 30px;
-    margin-bottom: -5px;
+    height: 40px;
+    margin-bottom: -25px;
     background: none;
     border-radius: 4px;
     box-shadow: none;
     line-height: 1.7;
+    .progress-shadow , .progress-bar {
+      border-radius: 4px;
+      min-width: 4%;
+    }
     .progress-bar {
       position: relative;
       padding: 0 1px;
       line-height: 1.3;
       background-color: $progress-bar-bg-color;
-      min-width: 4%;
       font-size: .8em;
       color: $progress-label-color - 25%;
       text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);
-      &:after{
-        content: ' ';
-        box-shadow: 2px 2px 2px 2px #000;
-        position: relative;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-      }
-
-
+      height: 30px;
 
       // this adds a white chevron sticking into the green pogress bar
       // &:after {
@@ -147,6 +144,13 @@ $progress-label-color: #177eb8;
       //   border-top: 15px solid transparent;
       //   border-bottom: 15px solid transparent;
       // }
+    }
+    .progress-shadow {
+      box-shadow: 0px 4px 3px 0px rgba(51, 51, 51, 0.78);
+      height: 10px;
+      position: relative;
+      top: 19px;
+      z-index: -10;
     }
   }
 }
