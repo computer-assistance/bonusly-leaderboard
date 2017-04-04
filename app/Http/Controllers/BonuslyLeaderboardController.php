@@ -32,7 +32,7 @@ class BonuslyLeaderboardController extends Controller
       $users = $this->getUsers();
       $index = 0;
 
-      $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receivedUrl());
+      $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
       dd($bonuses);
 
 

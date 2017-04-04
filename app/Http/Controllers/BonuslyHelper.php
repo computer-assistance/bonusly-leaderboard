@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class BonuslyHelper
 {
 
-  function receivedUrl() {
+  function receiveUrl() {
 
     // get current year and month
     $year  = Carbon::now()->year;
