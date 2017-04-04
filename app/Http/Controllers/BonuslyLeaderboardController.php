@@ -72,13 +72,7 @@ class BonuslyLeaderboardController extends Controller
       $givenTotal = Cache::get('givenTotal');
       $receivedTotal = Cache::get('receivedTotal');
       $divisor = Cache::get('divisor');
-
     }
-
     return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor'));
-  }
-
-  function getUsers($url) {
-    return $this->bonusHelper->makeBonuslyApiCall();
   }
 }

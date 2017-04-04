@@ -11,7 +11,6 @@ class BonuslyHelper
 {
 
   function receiveUrl() {
-
     // get current year and month
     $year  = Carbon::now()->year;
     $month = Carbon::now()->month;
@@ -31,9 +30,6 @@ class BonuslyHelper
   }
 
   function makeBonuslyApiCall($url) {
-
-    // $url = 'https://bonus.ly/api/v1/users'; //old 4.4.17
-
     $results = new \stdClass;
     $browser = new \Buzz\Browser();
 
@@ -83,9 +79,7 @@ class BonuslyHelper
   }
 
   function makeMonthlyBonusData($users, $bonuses) {
-    $resultsReturned = [];
-
-    // add new property to each user
+    // add new property to each user - received_this_month
     foreach ($users as $user) {
       $user->received_this_month = 0;
     }
