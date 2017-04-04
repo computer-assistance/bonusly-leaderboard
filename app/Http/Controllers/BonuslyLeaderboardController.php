@@ -6,9 +6,16 @@ use Cache;
 use Response;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Controllers\BonuslyHelper;
 
 class BonuslyLeaderboardController extends Controller
 {
+
+  public function __construct()
+  {
+    //Load helper functions
+    $this->bonusHelper = new BonuslyHelper();
+  }
 
   public function showBoard() {
 
@@ -24,6 +31,10 @@ class BonuslyLeaderboardController extends Controller
 
       $users = $this->getUsers();
       $index = 0;
+
+      $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receivedUrl());
+      dd($bonuses);
+
 
       foreach ($users as $user) {
         if ($user->display_name != 'Welcome') { // remove this user otherwise results are out by 100,000
@@ -58,7 +69,7 @@ class BonuslyLeaderboardController extends Controller
       $divisor = $this->getTheHighest($highestReceiverPoints, $highestGiverPoints);
       // dd($giverPointsData, $receiverPointsData);
 
-      $expiresAt = Carbon::now()->addMinutes(10);
+      $expiresAt = Carbon::now()->addMinutes(0);
 
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
@@ -115,20 +126,34 @@ class BonuslyLeaderboardController extends Controller
     }
   }
 
-  function makeBonuslyApiCall() {
+
+
+  function makeBonuslyApiCall2() {
+
+    // get current year and month
+    $year  = Carbon::now()->year;
+    $month = Carbon::now()->month;
+    // make a partial date string
+    $date = $year . '-' . $month;
+
+    // get month start date
+    $start = Carbon::parse($date)->startOfMonth()->toDateString();
+    // get month end date
+    $end = Carbon::parse($date)->endOfMonth()->toDateString();
 
     // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
 
     $bonsulyApiCall = [];
 
-    $url = 'https://bonus.ly/api/v1/users';
+    // $url = 'https://bonus.ly/api/v1/users'; //old 4.4.17
+    $url = 'https://bonus.ly/api/v1/bonuses';
 
     $res = new \stdClass;
     $browser = new \Buzz\Browser();
 
     $access_token = 'e288e7aadf0e48c1d0b3a5b84699e15a';
 
-    $apiUrl = $url . '?access_token=' . $access_token . '&show_financial_data=true';
+    $apiUrl = $url . '?access_token=' . $access_token . '&start_time=' . $start .'&end_time=' . $end . 'limit=500&include_children=false';
 
     $hostResponse = $browser->get($apiUrl, []);
     $content = json_decode($hostResponse->getContent());
@@ -139,7 +164,7 @@ class BonuslyLeaderboardController extends Controller
   }
 
   function getUsers() {
-    return $this->makeBonuslyApiCall();
+    return $this->bonusHelper->makeBonuslyApiCall();
   }
 
 
