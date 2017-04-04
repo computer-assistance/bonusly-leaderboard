@@ -58,7 +58,7 @@ class BonuslyLeaderboardController extends Controller
       $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
       // dd($giverPointsData, $receiverPointsData);
 
-      $expiresAt = Carbon::now()->addMinutes(0);
+      $expiresAt = Carbon::now()->addMinutes(10);
 
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
