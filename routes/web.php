@@ -11,8 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-    return view('master');
-});
-
-Route::get('leaderboard', 'BonuslyLeaderboardController@showBoard');
+Route::get('/', 'BonuslyLeaderboardController@showBoard');

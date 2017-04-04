@@ -1,18 +1,30 @@
 body {
   height: 100vh;
-  font-size: 3em!important;
+  font-size: 2em!important;
   background-color: #f5f8fa;
   text-shadow: 0px 3px 2px rgb(30, 48, 10);
 }
 
-h2{
+.container {
+  width: 1570px!important;
 }
+
 // $progress-bar-bg-color: blue;
 $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
+$progress-bar-bg-color: rgba(193, 163, 20, 0.8);
+$progress-bar-bg-color: rgba(255, 211, 0, 0.8);
+$progress-bar-bg-color: rgb(249, 216, 54);
+// $progress-bar-bg-color: #e2c849;
+
+
+
+$progress-label-color: #3097d1;
+$progress-label-color: #177eb8;
+$progress-label-color: #21aaf7;
+$progress-label-color: #d8e2e6;
 
 .blue-green-overlay:before {
   content: ' ';
-  background: linear-gradient(to bottom, #04a8d5 0%, #04a8d5 40%, #04cbd5 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04a8d5', endColorstr='#04cbd5', GradientType=0 );
   position: absolute;
   top: 0;
@@ -20,6 +32,7 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   right: 0;
   bottom: 0;
   z-index: -1;
+  background: linear-gradient(to bottom, #04a8d5 0%, #04a8d5 40%, #04cbd5 100%);
   background: linear-gradient(to bottom, #3c692f 0%, rgba(40, 126, 104, 0.8) 80%, rgba(73, 143, 126, 0.75) 100%);
   background:linear-gradient(to bottom, #e57f0e 0%, rgba(180, 111, 7, 0.8) 80%, rgba(122, 88, 1, 0.75) 100%);
   background: linear-gradient(to bottom, #3c692f 0%, rgba(89, 126, 40, 0.8) 80%, rgba(104, 143, 73, 0.75) 100%);
@@ -38,64 +51,88 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
 }
 
 .progress_label{
-  color: #3097d1;
-  color: #336b8a;
+  color: $progress-label-color;
+  // color: #336b8a;
   padding-left: 20px;
   position: relative;
+  top: -17px;
   // this adds a green chevron sticking into the white part of the progress bar
   &:before {
     content: "";
     position: absolute;
-    left: 0;
-    bottom: 0;
+    left: -2px;
+    bottom: 7px;
     width: 100%;
     height: 0;
-    border-left: 7px solid;
+    border-left: 11px solid;
     border-left-color: $progress-bar-bg-color;
-    border-top: 15px solid transparent;
+    border-top: 17px solid transparent;
     border-bottom: 15px solid transparent;
+    border-radius: 3px;
   }
 }
 
 #leaderboard_title_bar {
-  padding-bottom: 2em;
-  padding-top: 2em;
-  height: 260px;
+  padding-top: 4em;
+  h2, h3 {
+    // text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5) // replaced by 3d text effect below
+    color: rgba(0, 20, 34, 0.62);
+    background: -webkit-linear-gradient(#ffffff, #afafaf);
+    background: -webkit-linear-gradient(#336b8a, #04cad5);
+    color: rgba(255, 255, 255, 0.51);
+    background: -webkit-linear-gradient(#ffffff, #afafaf);
+    background: -webkit-linear-gradient(top, #d8e2e6 0%, #dadada 40%, #3f6b30 100%);
+    -webkit-background-clip: text;
+    text-shadow: #bbbbbb 0px 1px 0px, #b5b5b5 0px 2px 0px, #9c9b9b 0px 3px 0px, #888787 0px 4px 0px, #5d5c5c 0px 5px 0px, #3a3939 0px 6px 0px, rgba(0, 0, 0, 0.55) 0px 7px 1px, rgba(0, 0, 0, 0.296875) 0px 8px 6px;
+    text-shadow: 0px 3px 5px rgba(1, 1, 1, 0.24);
+    text-shadow: 0px 3px 7px rgba(1,1,1,0.57);
+  }
   h2 {
-    color: #d8e2e6;
-    text-shadow: 0px 3px 3px rgba(0, 0, 0, 0.5);
-    font-size: 60px;
+    font-size: 3.6em!important;
     font-weight: 900;
+    // margin: 0;
+    // font-size: 1.5em;
+  }
+  h3 {
+    margin: 0;
+    color: #cbb341;
+    font-weight: 500;
+    text-shadow: 0px 5px 7px rgba(1, 1, 1, 0.84);
+    font-size: 1.5em;
   }
   .pull-right {
-    margin-right: 80px;
+    // margin-right: 80px;
   }
   img {
-    // margin-right: 10px;
+    margin-left: -20px;
   }
 }
 
-#leaderboard_bars {
+.leaderboard_bars {
   text-shadow:   0px 1px 1px rgba(0, 0, 0, 0.6);
   font-size: 1.3em;
   font-weight: bolder;
   .progress {
     overflow: hidden;
-    height: 30px;
-    margin-bottom: 0;
-    background-color: #f5f5f5;
+    height: 40px;
+    margin-bottom: -25px;
+    background: none;
     border-radius: 4px;
-    box-shadow: 0px 3px 2px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
     line-height: 1.7;
+    .progress-shadow , .progress-bar {
+      border-radius: 4px;
+      min-width: 4%;
+    }
     .progress-bar {
       position: relative;
       padding: 0 1px;
-      line-height: 1.9;
+      line-height: 1.3;
       background-color: $progress-bar-bg-color;
-      min-width: 10%;
       font-size: .8em;
-      color: #2a4a60;
-      text-shadow: 0px 1px 1px rgba(32, 23, 104, 0.8);
+      color: #426d26;
+      text-shadow: 0px 2px 3px rgba(32, 23, 104, 0.8);
+      height: 30px;
 
       // this adds a white chevron sticking into the green pogress bar
       // &:after {
@@ -110,10 +147,23 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
       //   border-bottom: 15px solid transparent;
       // }
     }
+    .progress-shadow {
+      box-shadow: 0px 4px 3px 0px rgba(51, 51, 51, 0.78);
+      height: 10px;
+      position: relative;
+      top: 19px;
+      z-index: -10;
+    }
   }
 }
 
-#leaderboard_table {
+#tables {
+  margin-top: 200px;
+  display: none;
+}
+
+.leaderboard_table {
+  margin-top: 50px;
   color: #d8e2e6;
   box-shadow: 0px 8px 5px 3px rgba(0, 0, 0, 0.25);
   border: 6px solid;
@@ -123,39 +173,16 @@ $progress-bar-bg-color: rgba(116, 188, 68, 0.75);
   .pic img {
     border-radius: 30px;
     height: 2em;
-    box-shadow: 0px 6px 10px #555;
+    box-shadow: 0px 4px 6px #555;
   }
 }
 
 .progress-bar-img img {
   position: relative;
-  top: 28px;
-  right: 28px;
+  top: 34px;
+  right: 45px;
   text-align: left;
   height: 1.4em;
-  border-radius: 15px;
-}
-//
-// .box{
-//     margin: auto;
-// 	  background: #eee;
-// 	  border: 3px solid transparent;
-// 	  // -moz-border-image: -moz-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
-// 	  // -webkit-border-image: -webkit-linear-gradient(top left, #3acfd5 0%, #3a4ed5 100%);
-// 	  // border-image: linear-gradient(to bottom right, #3acfd5 0%, #3a4ed5 100%);
-//     border-image: linear-gradient(to bottom right, #f6e6b4 0%,#ed9017 100%);
-//     position: relative;
-// 	  border-image-slice: 1;
-//     &::after {
-//       position: fixed;
-//       top: -4px; bottom: -4px;
-//       left: -4px; right: -4px;
-//       background: linear-gradient(red, blue);
-//       content: '';
-//       z-index: -1;
-//       border-radius: 3px;
-//     }
-// 	}
-.container {
-    width: 1870px!important;
+  border-radius: 22px;
+  box-shadow: 0px 4px 6px #555;
 }
