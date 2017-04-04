@@ -32,7 +32,7 @@
   <div class="row">
 
     <div class="col-lg-6">
-      <div class="col-lg-10 col-lg-offset-3">
+      <div class="col-lg-10 col-lg-offset-4">
         <div class="leaderboard_bars">
         @foreach($giverPointsData as $d)
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
@@ -49,15 +49,15 @@
     </div>
 
     <div class="col-lg-6">
-      <div class="col-lg-10 col-lg-offset-1">
+      <div class="col-lg-10 col-lg-offset-2">
         <div class="leaderboard_bars">
         @foreach($receiverPointsData as $d)
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
         <div class="progress">
-          <div class="progress-bar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ (($d->earning_balance/$divisor) * 75)  }}%;">
-            {{ $d->earning_balance }}
+          <div class="progress-bar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ (($d->received_this_month/$divisor) * 75)  }}%;">
+            {{ $d->received_this_month }}
           </div>
-          <div class="progress-shadow" style="width: {{ (($d->earning_balance)/$divisor) * 75 }}%;"></div>
+          <div class="progress-shadow" style="width: {{ (($d->received_this_month)/$divisor) * 75 }}%;"></div>
           <label class="progress_label" style="width: 25%;">{{ ucfirst($d->display_name) }}</label>
         </div>
         @endforeach
@@ -113,7 +113,7 @@
               <th>{{ $indexKey +1 }}</th>
               <td class="pic"><img src="{{ $d->profile_pic_url }}"></td>
               <td class="name">{{ ucfirst($d->display_name) }}</td>
-              <td class="score">{{ $d->earning_balance }}</td>
+              <td class="score">{{ $d->received_this_month }}</td>
             </tr>
             @endforeach
           </tbody>

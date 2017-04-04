@@ -29,29 +29,18 @@ class BonuslyLeaderboardController extends Controller
       $highestGiverPoints = 0;
       $highestReceiverPoints = 0;
 
-      $users = $this->getUsers();
-      $index = 0;
+      $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
 
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
-      dd($bonuses);
 
-
-      foreach ($users as $user) {
-        if ($user->display_name != 'Welcome') { // remove this user otherwise results are out by 100,000
-          $highestGiverPoints = $this->getTheHighest((100 - $user->giving_balance), $highestGiverPoints);
-          $highestReceiverPoints = $this->getTheHighest(($user->earning_balance), $highestReceiverPoints);
-          $givenTotal += $this->sanitisePoints($user, 'giving_balance');
-          $receivedTotal += $this->sanitisePoints($user, 'earning_balance');
-        }
-        else {
-          unset($users[$index]);
-        }
-        $index++;
-      }
+      $highestGiverPoints = $this->bonusHelper->getHighestGiverPoints($users);
+      $highestReceiverPoints = $this->bonusHelper->getHighestReceiverPoints($users);
+      $givenTotal = $this->bonusHelper->getGivenTotal($users);
+      $receivedTotal = $this->bonusHelper->getReceivedTotal($users);
 
       $giverPointsData = $users;
-      $receiverPointsData = $users;
 
+      $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
 
       usort($giverPointsData, function($a, $b)
       {
@@ -60,13 +49,13 @@ class BonuslyLeaderboardController extends Controller
 
       usort($receiverPointsData, function($a, $b)
       {
-      return $b->earning_balance - $a->earning_balance;
+      return $b->received_this_month - $a->received_this_month;
       });
 
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
       $divisor = 0;
-      $divisor = $this->getTheHighest($highestReceiverPoints, $highestGiverPoints);
+      $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
       // dd($giverPointsData, $receiverPointsData);
 
       $expiresAt = Carbon::now()->addMinutes(0);
@@ -89,83 +78,7 @@ class BonuslyLeaderboardController extends Controller
     return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor'));
   }
 
-
-  function sanitisePoints($data, $prop) {
-
-    switch ($prop) {
-      case 'giving_balance':
-
-        if ($data->giving_balance > 100) {
-          $data->giving_balance = 100;
-        }
-        if ($data->giving_balance < 0) {
-          $data->giving_balance = 0;
-        }
-      return $data->giving_balance;
-      break;
-
-      case 'earning_balance':
-
-        if ($data->earning_balance < 0) {
-          $data->earning_balance = 0;
-        }
-        return $data->earning_balance;
-      break;
-
-      default:
-      # code...
-      break;
-    }
-  }
-
-  function getTheHighest($dataToCompare, $highestSoFar) {
-    if ($dataToCompare > $highestSoFar)
-      return $dataToCompare;
-    else {
-      return $highestSoFar;
-    }
-  }
-
-
-
-  function makeBonuslyApiCall2() {
-
-    // get current year and month
-    $year  = Carbon::now()->year;
-    $month = Carbon::now()->month;
-    // make a partial date string
-    $date = $year . '-' . $month;
-
-    // get month start date
-    $start = Carbon::parse($date)->startOfMonth()->toDateString();
-    // get month end date
-    $end = Carbon::parse($date)->endOfMonth()->toDateString();
-
-    // https://bonus.ly/api/v1/analytics/standouts?access_token=e288e7aadf0e48c1d0b3a5b84699e15a
-
-    $bonsulyApiCall = [];
-
-    // $url = 'https://bonus.ly/api/v1/users'; //old 4.4.17
-    $url = 'https://bonus.ly/api/v1/bonuses';
-
-    $res = new \stdClass;
-    $browser = new \Buzz\Browser();
-
-    $access_token = 'e288e7aadf0e48c1d0b3a5b84699e15a';
-
-    $apiUrl = $url . '?access_token=' . $access_token . '&start_time=' . $start .'&end_time=' . $end . 'limit=500&include_children=false';
-
-    $hostResponse = $browser->get($apiUrl, []);
-    $content = json_decode($hostResponse->getContent());
-
-    $res = $content->result;
-
-    return $res;
-  }
-
-  function getUsers() {
+  function getUsers($url) {
     return $this->bonusHelper->makeBonuslyApiCall();
   }
-
-
 }
