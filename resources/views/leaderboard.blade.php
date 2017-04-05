@@ -8,14 +8,20 @@
         <div class="col-lg-3 col-lg-offset-1">
           <img src="img/bonusly_header_logo_wht-1_grad_green2.png">
         </div>
-        <div class="col-lg-3 col-lg-offset-4">
+        <div class="col-lg-1 col-lg-offset-1" style="margin-top:70px; margin-bottom: -190px; padding: 0;">
+          <h1 class="month_label_2">{{ $thisMonth }}</h1>
+          <span class="my_day">{{ $thisDay }}</span>
+        </div>
+        <div class="col-lg-3 col-lg-offset-1">
           <img src="img/Computer-Assistance-aifile_white_300x89_grad_green2.png" class="pull-right">
         </div>
       </div>
     </div>
+  </div>
 
 
     <!-- Junaid said hide monthly totals -->
+    <div class="row">
      <div class="col-lg-4 col-lg-offset-1" style="text-align: center;">
       <h2 class="my_title">Givers</h2>
     <!--  <h3>Total {{ $givenTotal }} points </h3>  -->

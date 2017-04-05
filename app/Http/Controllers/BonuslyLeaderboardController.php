@@ -29,6 +29,9 @@ class BonuslyLeaderboardController extends Controller
       $highestGiverPoints = 0;
       $highestReceiverPoints = 0;
 
+      $thisMonth = $this->bonusHelper->getMonth();
+      $thisDay = $this->bonusHelper->getDayNumber();
+
       $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
 
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
@@ -58,21 +61,26 @@ class BonuslyLeaderboardController extends Controller
       $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
       // dd($giverPointsData, $receiverPointsData);
 
-      $expiresAt = Carbon::now()->addMinutes(10);
+      $expiresAt = Carbon::now()->addMinutes(0);
 
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('givenTotal', $givenTotal, $expiresAt);
       Cache::put('receivedTotal', $receivedTotal, $expiresAt);
       Cache::put('divisor', $divisor, $expiresAt);
+      Cache::put('thisMonth', $thisMonth, $expiresAt);
+      Cache::put('$thisDay', $thisDay, $expiresAt);
     }
     else {
-      $giverPointsData = Cache::get('giverPointsData');
       $receiverPointsData = Cache::get('receiverPointsData');
-      $givenTotal = Cache::get('givenTotal');
+      $giverPointsData = Cache::get('giverPointsData');
       $receivedTotal = Cache::get('receivedTotal');
+      $givenTotal = Cache::get('givenTotal');
+      $thisMonth = Cache::get('thisMonth');
       $divisor = Cache::get('divisor');
+      $thisDay = Cache::get('thisDay');
+
     }
-    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor'));
+    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay'));
   }
 }

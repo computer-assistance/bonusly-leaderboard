@@ -29,6 +29,15 @@ class BonuslyHelper
     return    'https://bonus.ly/api/v1/users?show_financial_data=true';
   }
 
+  function getMonth() {
+    $monthNumber = Carbon::now()->month;
+    return date("F", mktime(0, 0, 0, $monthNumber, 1));
+  }
+
+  function getDayNumber() {
+    return Carbon::now()->day;
+  }
+
   function makeBonuslyApiCall($url) {
     $results = new \stdClass;
     $browser = new \Buzz\Browser();
