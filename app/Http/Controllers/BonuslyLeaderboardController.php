@@ -69,7 +69,7 @@ class BonuslyLeaderboardController extends Controller
       Cache::put('receivedTotal', $receivedTotal, $expiresAt);
       Cache::put('divisor', $divisor, $expiresAt);
       Cache::put('thisMonth', $thisMonth, $expiresAt);
-      Cache::put('$thisDay', $thisDay, $expiresAt);
+      Cache::put('thisDay', $thisDay, $expiresAt);
     }
     else {
       $receiverPointsData = Cache::get('receiverPointsData');

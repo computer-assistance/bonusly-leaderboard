@@ -30,8 +30,7 @@ class BonuslyHelper
   }
 
   function getMonth() {
-    $monthNumber = Carbon::now()->month;
-    return date("F", mktime(0, 0, 0, $monthNumber, 1));
+    return date("F", mktime(0, 0, 0, Carbon::now()->month, 1));
   }
 
   function getDayNumber() {
