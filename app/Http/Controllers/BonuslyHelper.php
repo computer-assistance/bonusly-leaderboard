@@ -149,4 +149,8 @@ class BonuslyHelper
     }
   }
 
+  function getPos() {
+    
+  }
+
 }
