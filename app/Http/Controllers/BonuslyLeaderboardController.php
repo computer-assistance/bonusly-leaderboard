@@ -50,18 +50,21 @@ class BonuslyLeaderboardController extends Controller
       return $a->giving_balance - $b->giving_balance;
       });
 
+      $this->bonusHelper->setPositions($giverPointsData, 'giver');
+
       usort($receiverPointsData, function($a, $b)
       {
       return $b->received_this_month - $a->received_this_month;
       });
+      $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
+      // dd($giverPointsData, $receiverPointsData);
 
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
       $divisor = 0;
       $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
-      // dd($giverPointsData, $receiverPointsData);
 
-      $expiresAt = Carbon::now()->addMinutes(10);
+      $expiresAt = Carbon::now()->addMinutes(0);
 
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);

@@ -6,6 +6,8 @@ use Cache;
 use Response;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
+use App\Models\Position;
 
 class BonuslyHelper
 {
@@ -149,8 +151,48 @@ class BonuslyHelper
     }
   }
 
-  function getPos() {
-    
+  function setPositions($data, $type) {
+    // dd($data);
+    // $c = 0;
+    foreach ($data as $key => $d) {
+      // $c++;
+      $pos = Position::where('user_id', '=', $d->id)
+      ->where('type', '=', $type)
+      ->first();
+      // dd($pos);
+      if($pos) {
+        if ($pos->new_position > $key + 1 && $pos->old_position !=0) {
+          $pos->class = 'fa fa-arrow-down';
+          $pos->old_position = $pos->new_position;
+          $pos->new_position = $key + 1;
+        }
+        if ($pos->old_position < $key + 1 && $pos->old_position !=0) {
+          $pos->class = 'fa fa-arrow-up';
+          $pos->old_position = $pos->new_position;
+          $pos->new_position = $key + 1;
+        }
+        if ($pos->old_position == $key + 1 && $pos->new_position == $key + 1) {
+          $pos->class = 'fa fa-arrows-h';
+        }$pos->save();
+      }
+      else  {
+        // echo 'hit else' . $type . $c;
+        $pos = new Position;
+        $pos->user_id = $d->id;
+        $pos->type = $type;
+
+        $pos->old_position = $key + 1;
+        $pos->new_position = $key + 1;
+        $pos->class = 'init';
+
+        $pos->save();
+      }
+
+      // $order->items()->save(new Item($item));
+
+      // echo $d->id . "\n";
+    }
+    // echo $c,$type;
   }
 
 }

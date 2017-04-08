@@ -41,6 +41,11 @@
       <div class="col-lg-10 col-lg-offset-4">
         <div class="leaderboard_bars">
         @foreach($giverPointsData as $d)
+        <span class=""></span>
+
+        <i class="{{ \App\Models\Position::getCurrentGiverClass($d->id) }}" aria-hidden="true" title="Copy to use arrows-h"></i>
+
+
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
         <div class="progress">
           <div class="progress-bar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ ((100 - $d->giving_balance)/$divisor) * 75 }}%;">
