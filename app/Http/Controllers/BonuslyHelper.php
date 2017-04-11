@@ -188,6 +188,9 @@ class BonuslyHelper
   }
 
   function checkForPositionChanges($pos, $key) {
+    if ($pos->old_position == $key) {
+      $pos->class = 'no_move fa fa-arrows-h';
+    }
     if ($pos->old_position > $key && $pos->old_position !=0) {
       $pos->class = 'lower fa fa-arrow-down';
       $pos->old_position = $key;
@@ -195,9 +198,6 @@ class BonuslyHelper
     if ($pos->old_position < $key && $pos->old_position !=0) {
       $pos->class = 'higher fa fa-arrow-up';
       $pos->old_position = $key;
-    }
-    if ($pos->old_position == $key) {
-      $pos->class = 'no_move fa fa-arrows-h';
     }
     return $pos;
 }
