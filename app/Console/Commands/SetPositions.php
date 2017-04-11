@@ -203,7 +203,7 @@ class SetPositions extends Command
             $pos = $this->checkForPositionChanges($pos, $key + 1);
             $pos->save();
           }
-        }
+        } 
         else {
           $pos = new Position;
           $pos->user_id = $d->id;
