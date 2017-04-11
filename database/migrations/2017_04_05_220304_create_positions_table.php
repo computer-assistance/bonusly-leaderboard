@@ -16,10 +16,10 @@ class CreatePositionsTable extends Migration
         Schema::create('positions', function (Blueprint $table) {
           $table->increments('id');;
           $table->string('user_id');
+          $table->string('username');
           $table->string('type');
           $table->string('class');
           $table->integer('old_position');
-          $table->integer('new_position');
           $table->timestamps();
         });
     }
