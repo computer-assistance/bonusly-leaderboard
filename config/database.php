@@ -35,7 +35,7 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => '/Users/deemy/htdocs/bonusly-board/database/bonusly_db.sqlite',
+            'database' => '/var/www/html/bonusly-board/database/bonusly_db.sqlite',
             'prefix' => '',
         ],
 
