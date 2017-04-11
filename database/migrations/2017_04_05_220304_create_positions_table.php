@@ -20,6 +20,8 @@ class CreatePositionsTable extends Migration
           $table->string('type');
           $table->string('class');
           $table->integer('old_position');
+          $table->integer('given_points')->nullable();
+          $table->integer('received_points')->nullable();
           $table->timestamps();
         });
     }

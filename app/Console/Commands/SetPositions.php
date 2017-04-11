@@ -102,8 +102,6 @@ class SetPositions extends Command
       $this->obj6 = new \stdClass();
       $this->obj7 = new \stdClass();
       $this->obj8 = new \stdClass();
-      $this->giverPositions = Position::where('type', 'giver')->get();
-      $this->receiverPositions = Position::where('type', '=', 'receiver')->get();
       // $this->obj1->id = "58ac031d7b8d8601a3c373f3";//, "type" : "giver", "class" : "fa fa-arrows-h", "old_position" : 1, "new_position" : 1, "points" : 24);
     }
 
@@ -200,16 +198,23 @@ class SetPositions extends Command
         ->where('type', '=', $type)
         ->first();
 
-        if($pos)
+        if($pos && ($pos->given_points != 100 - $d->giving_balance || $pos->received_points != $d->received_this_month) ) {
           $pos = $this->checkForPositionChanges($pos, $key + 1);
-        else  {
+          $pos->save();
+        }
+        else {
           $pos = new Position;
           $pos->user_id = $d->id;
           $pos->type = $type;
           $pos->username = $d->display_name;
           $pos->old_position = $key + 1;
           $pos->class = 'init fa fa-sun-o';
-
+          if($type == 'giver') {
+            $pos->given_points = 100 - $d->giving_balance;
+          }
+          if($type == 'receiver') {
+            $pos->received_points = $d->received_this_month;
+          }
           $pos->save();
         }
       }
@@ -231,17 +236,38 @@ class SetPositions extends Command
   }
 
     function hotwire(){
-      $pos = Position::where('user_id', '=', '5846d6b0387f8a036bc9351c')
-      ->where('type', '=', 'receiver')
-      ->first();
-      // dd($pos);
+      $name = $this->anticipate('user name?', ['hristo', 'denis', 'cristian']);
       $idx = $this->ask('New position?');
+      $type = $this->anticipate('receiver or giver?', ['receiver','giver']);
+      $id = null;
+
+      switch ($name) {
+        case 'hristo':
+        $id = '5846d6b0387f8a036bc9351c';
+        break;
+        case 'denis':
+        $id = '58ac031e7b8d860264c373f3';
+        break;
+        case 'cristian':
+        $id = '58ac031e7b8d86024ec373f3';
+        break;
+
+        default:
+          # code...
+          break;
+      }
+
+      $pos = Position::where('user_id', '=', $id)
+      ->where('type', '=', $type)
+      ->first();
+       dump($pos);
+
       if($pos) {
         $pos = $this->checkForPositionChanges($pos, $idx);
         // $pos->username = "fote";
         // $pos->old_position = 9;
       }
-      dump($pos);
+      // dump($pos);
       $pos->save();
     }
     /**
@@ -251,29 +277,7 @@ class SetPositions extends Command
      */
     public function handle()
     {
-      // $this->posArray1[] =  (object) ("id" => "58ac031e7b8d86024ec373f3", "type" => "receiver", "class" => "fa fa-arrows-h", "old_position" => 5, "new_position" => 5, "points" => 17);
-      // $posArray2 = array();
-      //
-      // $pArr = $this->posArray1;
-      //
-      // $arrayClos = function () use ($pArr) {
-      //   $ar = array();
-      //   foreach ($pArr as $key => $value) {
-      //     // dump($key, $value);
-      //     $value = (object) $value;
-      //     array_shift($pArr);
-      //     $pArr [] = $value;
-      //
-      //   }
-      //   return $pArr;
-      // };
-
-      // $myNewArrayOfObj = $arrayClos();
-        // dump("newArrayObj" , $myNewArrayOfObj);
-        // $dataTest = $this->setPositions3($myNewArrayOfObj, 'giver');
-        // $dataTest2 = $this->setPositionsHelper($myNewArrayOfObj, 'giver');
-        // $this->hotwire();
-        // dump($dataTest2);
+        $this->hotwire();
     }
 }
 

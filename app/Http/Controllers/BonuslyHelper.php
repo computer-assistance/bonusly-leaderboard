@@ -164,13 +164,12 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
-
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
       ->first();
 
-      if($pos) {
+      if($pos && ($pos->given_points != 100 - $d->giving_balance || $pos->received_points != $d->received_this_month) ) {
         $pos = $this->checkForPositionChanges($pos, $key + 1);
         $pos->save();
       }
@@ -181,7 +180,12 @@ class BonuslyHelper
         $pos->username = $d->display_name;
         $pos->old_position = $key + 1;
         $pos->class = 'init fa fa-sun-o';
-
+        if($type == 'giver') {
+          $pos->given_points = 100 - $d->giving_balance;
+        }
+        if($type == 'receiver') {
+          $pos->received_points = $d->received_this_month;
+        }
         $pos->save();
       }
     }
