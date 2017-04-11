@@ -203,7 +203,7 @@ class SetPositions extends Command
             $pos = $this->checkForPositionChanges($pos, $key + 1);
             $pos->save();
           }
-        } 
+        }
         else {
           $pos = new Position;
           $pos->user_id = $d->id;
@@ -238,7 +238,7 @@ class SetPositions extends Command
         $pos->old_position = $new_position;
       }
       return $pos;
-  }
+    }
 
     function hotwire(){
       $name = $this->anticipate('user name?', ['hristo', 'denis', 'cristian']);
