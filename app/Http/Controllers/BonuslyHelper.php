@@ -85,8 +85,6 @@ class BonuslyHelper
     return $highest/100;
   }
 
-  // $this->bonusHelper->makeDivisor($highestReceiverPoints, $highestGiverPoints)
-
   function getTheHighest($dataToCompare, $highestSoFar) {
     if ($dataToCompare > $highestSoFar)
     return $dataToCompare;
@@ -194,19 +192,19 @@ class BonuslyHelper
     }
   }
 
-  function checkForPositionChanges($pos, $key) {
-    if ($pos->old_position == $key) {
+  function checkForPositionChanges($pos, $new_position) {
+    if ($pos->old_position == $new_position) {
       $pos->class = 'no_move fa fa-arrows-h';
     }
-    if ($pos->old_position > $key && $pos->old_position !=0) {
+    if ($new_position > $pos->old_position) {
       $pos->class = 'lower fa fa-arrow-down';
-      $pos->old_position = $key;
+      $pos->old_position = $new_position;
     }
-    if ($pos->old_position < $key && $pos->old_position !=0) {
+    if ($new_position < $pos->old_position) {
       $pos->class = 'higher fa fa-arrow-up';
-      $pos->old_position = $key;
+      $pos->old_position = $new_position;
     }
     return $pos;
-}
+  }
 
 }
