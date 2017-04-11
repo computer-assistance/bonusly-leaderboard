@@ -6,6 +6,8 @@ use Cache;
 use Response;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
+use App\Models\Position;
 
 class BonuslyHelper
 {
@@ -41,7 +43,7 @@ class BonuslyHelper
     $results = new \stdClass;
     $browser = new \Buzz\Browser();
 
-    $access_token = 'e288e7aadf0e48c1d0b3a5b84699e15a';
+    $access_token = config('bonusly.token');
 
     $apiUrl = $url . '&access_token=' . $access_token;
 
@@ -62,26 +64,46 @@ class BonuslyHelper
     return $highest;
   }
 
-  function getHighestReceiverPoints($users) {
+  function getHighestPoints($users, $field) {
     $highest = 0;
     foreach ($users as $user) {
-      $highest = $this->getTheHighest($user->earning_balance, $highest);
+      if($field == 'giving_balance') {
+        $highest = $this->getTheHighest(100 - $user->$field, $highest);
+      }
+      else {
+        $highest = $this->getTheHighest($user->$field, $highest);
+      }
     }
     return $highest;
   }
 
-  function getGivenTotal($users) {
-    $total = 0;
-    foreach ($users as $user) {
-      $total += $this->sanitisePoints($user, 'giving_balance');
+  function makeWidthFactor($highestReceiverPoints, $highestGiverPoints) {
+    $highest = $this->getTheHighest($highestReceiverPoints, $highestGiverPoints);
+    if ($highest > 100) {
+      $highest = 100;
     }
-    return $total;
+    return $highest/100;
   }
 
-  function getReceivedTotal($users) {
+  // $this->bonusHelper->makeDivisor($highestReceiverPoints, $highestGiverPoints)
+
+  function getTheHighest($dataToCompare, $highestSoFar) {
+    if ($dataToCompare > $highestSoFar)
+    return $dataToCompare;
+    else {
+      return $highestSoFar;
+    }
+  }
+
+  function getTotal($users, $field) {
     $total = 0;
     foreach ($users as $user) {
-      $total += $this->sanitisePoints($user, 'earning_balance');
+      if($field == 'giving_balance') {
+        $total += 100 - $this->sanitisePoints($user, $field);
+      }
+      else {
+        $total += $this->sanitisePoints($user, $field);
+      }
     }
     return $total;
   }
@@ -127,12 +149,12 @@ class BonuslyHelper
       return $data->giving_balance;
       break;
 
-      case 'earning_balance':
+      case 'received_this_month':
 
-      if ($data->earning_balance < 0) {
-        $data->earning_balance = 0;
+      if ($data->received_this_month < 0) {
+        $data->received_this_month = 0;
       }
-      return $data->earning_balance;
+      return $data->received_this_month;
       break;
 
       default:
@@ -141,12 +163,41 @@ class BonuslyHelper
     }
   }
 
-  function getTheHighest($dataToCompare, $highestSoFar) {
-    if ($dataToCompare > $highestSoFar)
-    return $dataToCompare;
-    else {
-      return $highestSoFar;
+  function setPositions($data, $type) {
+
+    foreach ($data as $key => $d) {
+      $pos = Position::where('user_id', '=', $d->id)
+      ->where('type', '=', $type)
+      ->first();
+
+      if($pos)
+        $pos = $this->checkForPositionChanges($pos, $key + 1);
+      else  {
+        $pos = new Position;
+        $pos->user_id = $d->id;
+        $pos->type = $type;
+        $pos->username = $d->display_name;
+        $pos->old_position = $key + 1;
+        $pos->class = 'init fa fa-sun-o';
+
+        $pos->save();
+      }
     }
   }
+
+  function checkForPositionChanges($pos, $key) {
+    if ($pos->old_position > $key && $pos->old_position !=0) {
+      $pos->class = 'lower fa fa-arrow-down';
+      $pos->old_position = $key;
+    }
+    if ($pos->old_position < $key && $pos->old_position !=0) {
+      $pos->class = 'higher fa fa-arrow-up';
+      $pos->old_position = $key;
+    }
+    if ($pos->old_position == $key) {
+      $pos->class = 'no_move fa fa-arrows-h';
+    }
+    return $pos;
+}
 
 }

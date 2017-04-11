@@ -180,7 +180,7 @@ $progress-label-color: #d8e2e6;
 .progress-bar-img img {
   position: relative;
   top: 34px;
-  right: 45px;
+  right: 75px;
   text-align: left;
   height: 1.4em;
   border-radius: 22px;
@@ -238,4 +238,26 @@ $progress-label-color: #d8e2e6;
   text-shadow: 0px 5px 7px #1e300a;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+
+.lower {
+  color: #c40a27;
+}
+
+.higher {
+  color: #8bed4a;
+}
+
+.no_move {
+  color: #0a8bc4;
+}
+
+.init {
+  color: #f9cc36;
+}
+
+.position {
+  position: relative;
+  top: 36px;
+  right: 80px;
 }
