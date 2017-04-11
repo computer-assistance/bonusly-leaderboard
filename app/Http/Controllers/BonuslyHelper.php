@@ -171,6 +171,13 @@ class BonuslyHelper
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           $pos = $this->checkForPositionChanges($pos, $key + 1);
+          if ($type == 'giver') {
+            $pos->given_points = 100 - $d->giving_balance;
+          }
+
+          if ($type == 'receiver') {
+            $pos->received_points != $d->received_this_month;
+          }
           $pos->save();
         }
       }
@@ -199,12 +206,18 @@ class BonuslyHelper
     if ($new_position > $pos->old_position) {
       $pos->class = 'lower fa fa-arrow-down';
       $pos->old_position = $new_position;
+      $this->swapPlaces($pos, 'down');
     }
     if ($new_position < $pos->old_position) {
       $pos->class = 'higher fa fa-arrow-up';
       $pos->old_position = $new_position;
+      $this->swapPlaces($pos, 'up');
     }
     return $pos;
+  }
+
+  function swapPlaces() {
+
   }
 
 }
