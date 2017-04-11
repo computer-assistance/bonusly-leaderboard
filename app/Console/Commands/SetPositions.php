@@ -198,9 +198,11 @@ class SetPositions extends Command
         ->where('type', '=', $type)
         ->first();
 
-        if($pos && ($pos->given_points != 100 - $d->giving_balance || $pos->received_points != $d->received_this_month) ) {
-          $pos = $this->checkForPositionChanges($pos, $key + 1);
-          $pos->save();
+        if($pos) {
+          if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
+            $pos = $this->checkForPositionChanges($pos, $key + 1);
+            $pos->save();
+          }
         }
         else {
           $pos = new Position;
@@ -220,17 +222,20 @@ class SetPositions extends Command
       }
     }
 
-    function checkForPositionChanges($pos, $key) {
-      if ($pos->old_position == $key) {
+    function checkForPositionChanges($pos, $new_position) {
+      if ($pos->old_position == $new_position) {
+        echo 'hit == ' . "\n";
         $pos->class = 'no_move fa fa-arrows-h';
       }
-      if ($key > $pos->old_position) {
+      if ($new_position > $pos->old_position) {
+        echo 'hit > ' . "\n";
         $pos->class = 'lower fa fa-arrow-down';
-        $pos->old_position = $key;
+        $pos->old_position = $new_position;
       }
-      if ($key < $pos->old_position) {
+      if ($new_position < $pos->old_position) {
+        echo 'hit < ' . "\n";
         $pos->class = 'higher fa fa-arrow-up';
-        $pos->old_position = $key;
+        $pos->old_position = $new_position;
       }
       return $pos;
   }
@@ -260,14 +265,14 @@ class SetPositions extends Command
       $pos = Position::where('user_id', '=', $id)
       ->where('type', '=', $type)
       ->first();
-       dump($pos);
+      //  dump($pos);
 
       if($pos) {
         $pos = $this->checkForPositionChanges($pos, $idx);
         // $pos->username = "fote";
         // $pos->old_position = 9;
       }
-      // dump($pos);
+      dump($pos);
       $pos->save();
     }
     /**
