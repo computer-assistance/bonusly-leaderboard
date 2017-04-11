@@ -34,8 +34,8 @@ return [
     'connections' => [
 
         'sqlite' => [
-            'driver' => 'sqlite',
-            'database' => '/var/www/html/bonusly-board/database/bonusly_db.sqlite',
+            'driver' => env('DB_CONNECTION'),
+            'database' => env('DB_DATABASE'),// '/Users/deemy/htdocs/bonusly-board/database/bonusly_db.sqlite',
             'prefix' => '',
         ],
 

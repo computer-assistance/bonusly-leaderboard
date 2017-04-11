@@ -170,9 +170,11 @@ class BonuslyHelper
       ->where('type', '=', $type)
       ->first();
 
-      if($pos)
+      if($pos) {
         $pos = $this->checkForPositionChanges($pos, $key + 1);
-      else  {
+        $pos->save();
+      }
+      else {
         $pos = new Position;
         $pos->user_id = $d->id;
         $pos->type = $type;
