@@ -176,7 +176,7 @@ class BonuslyHelper
           }
 
           if ($type == 'receiver') {
-            $pos->received_points != $d->received_this_month;
+            $pos->received_points = $d->received_this_month;
           }
           $pos->save();
         }
