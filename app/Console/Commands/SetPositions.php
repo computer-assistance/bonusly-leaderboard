@@ -274,7 +274,7 @@ class SetPositions extends Command
         // $dataTest2 = $this->setPositionsHelper($myNewArrayOfObj, 'giver');
         // $this->hotwire();
         // dump($dataTest2);
-    // }
+    }
 }
 
 
