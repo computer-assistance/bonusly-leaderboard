@@ -199,19 +199,26 @@ class BonuslyHelper
     }
   }
 
-  function checkForPositionChanges($pos, $new_position) {
-    if ($pos->old_position == $new_position) {
+  function checkForPositionChanges($pos, $newPosition) {
+    $oldPosition = $pos->old_position;
+    if ($pos->old_position == $newPosition) {
       $pos->class = 'no_move fa fa-arrows-h';
     }
-    if ($new_position > $pos->old_position) {
+    if ($newPosition > $pos->old_position) {
       $pos->class = 'lower fa fa-arrow-down';
-      $pos->old_position = $new_position;
+      $pos->old_position = $newPosition;
+      $this->swapPlaces($pos, $oldPosition, $newPosition, 'down');
     }
-    if ($new_position < $pos->old_position) {
+    if ($newPosition < $pos->old_position) {
       $pos->class = 'higher fa fa-arrow-up';
-      $pos->old_position = $new_position;
+      $pos->old_position = $newPosition;
+      $this->swapPlaces($pos, $oldPosition, $newPosition, 'up');
     }
     return $pos;
+  }
+
+  function swapPlaces($pos, $oldPosition, $newPosition, $direction) {
+    dd($pos, $oldPosition, $newPosition, $direction);
   }
 
 }
