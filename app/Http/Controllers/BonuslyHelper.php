@@ -218,7 +218,7 @@ class BonuslyHelper
   }
 
   function swapPlaces($pos, $oldPosition, $newPosition, $direction) {
-    dd($pos, $oldPosition, $newPosition, $direction);
+    //dd($pos, $oldPosition, $newPosition, $direction);
   }
 
 }
