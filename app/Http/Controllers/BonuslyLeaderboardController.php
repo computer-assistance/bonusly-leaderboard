@@ -73,7 +73,7 @@ class BonuslyLeaderboardController extends Controller
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
 
-      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
+      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor); 
 
       $expiresAt = Carbon::now()->addMinutes(0);
 
