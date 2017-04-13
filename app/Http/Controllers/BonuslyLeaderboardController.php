@@ -75,7 +75,7 @@ class BonuslyLeaderboardController extends Controller
 
       // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor); 
 
-      $expiresAt = Carbon::now()->addMinutes(0);
+      $expiresAt = Carbon::now()->addMinutes(10);
 
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
