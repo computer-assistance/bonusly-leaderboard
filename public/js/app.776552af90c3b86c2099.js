@@ -11240,7 +11240,7 @@ var app = new Vue({
 /* 11 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+throw new Error("Module build failed: ModuleBuildError: Module build failed: \n@import \"node_modules/font-awesome/scss/_variables.scss\";\n^\n      File to import not found or unreadable: node_modules/font-awesome/scss/_variables.scss.\nParent style sheet: stdin\n      in /home/nadeem/projects/bonusly-board/resources/assets/sass/app.scss (line 14, column 1)\n    at /home/nadeem/projects/bonusly-board/node_modules/webpack/lib/NormalModule.js:141:35\n    at /home/nadeem/projects/bonusly-board/node_modules/loader-runner/lib/LoaderRunner.js:364:11\n    at /home/nadeem/projects/bonusly-board/node_modules/loader-runner/lib/LoaderRunner.js:230:18\n    at context.callback (/home/nadeem/projects/bonusly-board/node_modules/loader-runner/lib/LoaderRunner.js:111:13)\n    at Object.asyncSassJobQueue.push [as callback] (/home/nadeem/projects/bonusly-board/node_modules/sass-loader/lib/loader.js:57:13)\n    at Object.<anonymous> (/home/nadeem/projects/bonusly-board/node_modules/sass-loader/node_modules/async/dist/async.js:2237:31)\n    at apply (/home/nadeem/projects/bonusly-board/node_modules/sass-loader/node_modules/async/dist/async.js:20:25)\n    at Object.<anonymous> (/home/nadeem/projects/bonusly-board/node_modules/sass-loader/node_modules/async/dist/async.js:56:12)\n    at Object.callback (/home/nadeem/projects/bonusly-board/node_modules/sass-loader/node_modules/async/dist/async.js:843:16)\n    at options.error (/home/nadeem/projects/bonusly-board/node_modules/node-sass/lib/index.js:294:32)");
 
 /***/ }),
 /* 12 */
@@ -31653,7 +31653,7 @@ var Component = __webpack_require__(35)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/deemy/htdocs/bonusly-board/resources/assets/js/components/Example.vue"
+Component.options.__file = "/home/nadeem/projects/bonusly-board/resources/assets/js/components/Example.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 if (Component.options.functional) {console.error("[vue-loader] Example.vue: functional components are not supported with templates, they should use render functions.")}
 
