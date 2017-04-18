@@ -9,3 +9,4 @@ Homestead.yaml
 .env
 dump.rdb
 /database/bonusly_db.sqlite
+npm-debug.log
