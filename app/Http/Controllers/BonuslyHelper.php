@@ -204,12 +204,12 @@ class BonuslyHelper
     if ($pos->old_position == $newPosition) {
       $pos->class = 'no_move fa fa-arrows-h';
     }
-    if ($newPosition < $pos->old_position) {
+    if ($newPosition > $pos->old_position) {
       $pos->class = 'lower fa fa-arrow-down';
       $pos->old_position = $newPosition;
       $this->swapPlaces($pos, $oldPosition, $newPosition, 'down');
     }
-    if ($newPosition > $pos->old_position) {
+    if ($newPosition < $pos->old_position) {
       $pos->class = 'higher fa fa-arrow-up';
       $pos->old_position = $newPosition;
       $this->swapPlaces($pos, $oldPosition, $newPosition, 'up');
