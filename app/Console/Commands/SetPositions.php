@@ -222,22 +222,48 @@ class SetPositions extends Command
       }
     }
 
-    function checkForPositionChanges($pos, $new_position) {
-      if ($pos->old_position == $new_position) {
-        echo 'hit == ' . "\n";
+    function checkForPositionChanges($pos, $newPosition) {
+      $oldPosition = $pos->old_position;
+      if ($pos->old_position == $newPosition) {
         $pos->class = 'no_move fa fa-arrows-h';
       }
-      if ($new_position > $pos->old_position) {
-        echo 'hit > ' . "\n";
+      if ($newPosition > $pos->old_position) {
         $pos->class = 'lower fa fa-arrow-down';
-        $pos->old_position = $new_position;
+        $pos->old_position = $newPosition;
+        $this->swapPlaces($pos, $oldPosition, $newPosition, 'down');
       }
-      if ($new_position < $pos->old_position) {
-        echo 'hit < ' . "\n";
+      if ($newPosition < $pos->old_position) {
         $pos->class = 'higher fa fa-arrow-up';
-        $pos->old_position = $new_position;
+        $pos->old_position = $newPosition;
+        $this->swapPlaces($pos, $oldPosition, $newPosition, 'up');
       }
       return $pos;
+    }
+
+    function swapPlaces($pos, $oldPosition, $newPosition, $direction) {
+      $swapping_pos = null;
+      // dd($pos, $oldPosition, $newPosition, $direction);
+
+      switch ($direction) {
+        case 'down':
+        $swapping_pos = Position::where('old_position', '=', $pos->old_position + 1 )
+        ->where('type', '=', $pos->type)
+        ->first();
+        $swapping_pos->class = 'lower fa fa-arrow-down';
+        $swapping_pos->save();
+        break;
+        case 'up':
+        $swapping_pos = Position::where('old_position', '=', $pos->old_position - 1 )
+        ->where('type', '=', $pos->type)
+        ->first();
+        $swapping_pos->class = 'higher fa fa-arrow-up';
+        $swapping_pos->save();
+        break;
+
+        default:
+        # code...
+        break;
+      }
     }
 
     function hotwire(){
