@@ -114,8 +114,10 @@ class BonuslyHelper
 
     foreach ($bonuses as $bonus) {
       foreach ($users as $user) {
-        if($bonus->receiver->id == $user->id) {
-          $user->received_this_month += $bonus->amount;
+        foreach ($bonus->receivers as $receiver) {
+          if($receiver->id == $user->id) {
+            $user->received_this_month += $bonus->amount;
+          }
         }
       }
     }
