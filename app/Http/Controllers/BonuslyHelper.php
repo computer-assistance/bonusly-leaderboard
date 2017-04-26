@@ -7,10 +7,17 @@ use Response;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
+use App\Models\User;
+use App\Models\Giver;
+use App\Models\Bonus;
 use App\Models\Position;
+use App\Models\Recipient;
 
 class BonuslyHelper
 {
+  function usersUrl() {
+    return 'https://bonus.ly/api/v1/users?limit=100';
+  }
 
   function receiveUrl() {
     // get current year and month
@@ -24,11 +31,37 @@ class BonuslyHelper
     // get month end date
     $end = Carbon::parse($date)->endOfMonth()->toDateString();
 
-    return 'https://bonus.ly/api/v1/bonuses' . '?start_time=' . $start .'&end_time=' . $end . '&limit=500&include_children=false';
+    return 'https://bonus.ly/api/v1/bonuses' . '?start_time=' . $start . '&end_time=' . $end . '&limit=500&include_children=false';
+  }
+
+  function bonusUrl() {
+    // get current year and month
+    $year  = Carbon::now()->year;
+    $month = Carbon::now()->month;
+    // make a partial date string
+    $date = $year . '-' . $month;
+
+    // get month start date
+    $start = Carbon::parse($date)->startOfMonth()->toDateString();
+    // get month end date
+    $end = Carbon::parse($date)->endOfMonth()->toDateString();
+
+    return 'https://bonus.ly/api/v1/bonuses' . '?start_time=' . $start . '&end_time=' . $end . '&limit=500&include_children=false';
   }
 
   function giveUrl() {
-    return    'https://bonus.ly/api/v1/users?show_financial_data=true';
+    // get current year and month
+    $year  = Carbon::now()->year;
+    $month = Carbon::now()->month;
+    // make a partial date string
+    $date = $year . '-' . $month;
+
+    // get month start date
+    $start = Carbon::parse($date)->startOfMonth()->toDateString();
+    // get month end date
+    $end = Carbon::parse($date)->endOfMonth()->toDateString();
+
+    return 'https://bonus.ly/api/v1/users?show_financial_data=true' . '&start_time=' . $start . '&end_time=' . $end;
   }
 
   function getMonth() {
@@ -38,6 +71,50 @@ class BonuslyHelper
   function getDayNumber() {
     return Carbon::now()->day;
   }
+
+  function storeUsersInDb() {
+    $url = $this->usersUrl();
+
+    $users = $this->removeWelcomeUser($this->makeBonuslyApiCall($this->usersUrl()));
+    foreach ($users as $user) {
+      $storedUser = User::firstOrCreate([
+        'user_id' => $user->id,
+        'username' => $user->username,
+        'email' => $user->email
+      ]);
+    }
+  }
+
+  function storeBonusesInDb() {
+    $url = $this->bonusUrl();
+
+    $bonuses = $this->makeBonuslyApiCall($this->bonusUrl());
+    // dd($bonuses);
+    foreach ($bonuses as $bonus) {
+      $storedBonus = Bonus::firstOrCreate([
+        'bonus_id' => $bonus->id,
+        'date_given' => Carbon::createFromFormat('Y-m-d\TH:i:s\Z', $bonus->created_at),
+        'amount' => $bonus->amount,
+        'hashtag' => $bonus->hashtag,
+        'value' => $bonus->value,
+        'reason' => $bonus->reason,
+        'reason_html' => $bonus->reason_html,
+        'amount_with_currency' => $bonus->amount_with_currency
+      ]);
+      $giver = Giver::firstOrCreate([
+        'bonus_id' => $bonus->id,
+        'giver_id' => $bonus->giver->id,
+
+      ]);
+      foreach ($bonus->receivers as $receiver) {
+        $recipient = Recipient::firstOrCreate([
+          'bonus_id' => $bonus->id,
+          'recipient_id' => $receiver->id,
+        ]);
+      }
+    }
+  }
+
 
   function makeBonuslyApiCall($url) {
     $results = new \stdClass;
@@ -136,7 +213,6 @@ class BonuslyHelper
   }
 
   function sanitisePoints($data, $prop) {
-
     switch ($prop) {
       case 'giving_balance':
 
@@ -164,7 +240,16 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
+    $giverData = array();
+
     // dd($data);
+    // dd($this->removeWelcomeUser($this->checkForNewBonuses($this->giveUrl())));
+    $res = $this->checkForNewBonuses($this->receiveUrl());
+    foreach ($res as $key => $value) {
+        array_push($giverData, $this->processGiverData($value));
+    }
+    dump($giverData);
+    die;
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
@@ -199,6 +284,16 @@ class BonuslyHelper
         $pos->save();
       }
     }
+  }
+
+  function processGiverData($data) {
+    $returnObject = new \stdClass();
+    $returnObject->data = $data;
+    return $data;
+  }
+
+  function checkForNewBonuses($url) {
+    return $this->makeBonuslyApiCall($url);
   }
 
   function checkForPositionChanges($pos, $newPosition) {
