@@ -42,27 +42,31 @@ class BonuslyLeaderboardController extends Controller
       $this->bonusHelper->storeUsersInDb();
       $this->bonusHelper->storeBonusesInDb();
 
-      $bonuses = Bonus::orderBy('date_given','desc')->get();
-      $bonuses2 = Bonus::thisMonth()->get();
-      // $bonuses3 = Bonus::thisWeek()->get();
-      $bonuses3 = Bonus::yesterday()->get();
-      // dd($bonuses, $bonuses3);
+      // $bonuses = Bonus::orderBy('date_given','desc')->get();
+      // $bonuses2 = Bonus::thisMonth()->get();
+      // // $bonuses3 = Bonus::thisWeek()->get();
+      // $bonuses3 = Bonus::yesterday()->get();
+      // // dd($bonuses, $bonuses3);
+      //
+      // foreach ($bonuses3 as $bonus3) {
+      //   dump($bonuses);
+      // }
+      //
+      // $givers = Giver::all();
+      //
+      // // dump($givers);
+      //
+      // foreach ($givers as $giver) {
+      //   // dump($giver->bonuses);
+      // }
+      // die;
 
-      foreach ($bonuses3 as $bonus3) {
-        dump($bonuses);
-      }
 
-      $givers = Giver::all();
-
-      // dump($givers);
-
-      foreach ($givers as $giver) {
-        // dump($giver->bonuses);
-      }
-      die;
-
-      // $giverPointsData = $users;
-      // $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
+      $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
+      $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
+      
+      $giverPointsData = $users;
+      $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
 
       $givenTotal = $this->bonusHelper->getTotal($users, 'giving_balance');
       $receivedTotal = $this->bonusHelper->getTotal($receiverPointsData, 'received_this_month');

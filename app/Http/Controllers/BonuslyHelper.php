@@ -248,8 +248,8 @@ class BonuslyHelper
     foreach ($res as $key => $value) {
         array_push($giverData, $this->processGiverData($value));
     }
-    dump($giverData);
-    die;
+    // dump($giverData);
+    // die;
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
