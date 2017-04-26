@@ -8,6 +8,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BonuslyHelper;
 
+use App\Models\Bonus;
+use App\Models\Giver;
+
 class BonuslyLeaderboardController extends Controller
 {
 
@@ -36,13 +39,34 @@ class BonuslyLeaderboardController extends Controller
       $thisDay = $this->bonusHelper->getDayNumber();
 
 
+      $this->bonusHelper->storeUsersInDb();
+      $this->bonusHelper->storeBonusesInDb();
+
+      // $bonuses = Bonus::orderBy('date_given','desc')->get();
+      // $bonuses2 = Bonus::thisMonth()->get();
+      // // $bonuses3 = Bonus::thisWeek()->get();
+      // $bonuses3 = Bonus::yesterday()->get();
+      // // dd($bonuses, $bonuses3);
+      //
+      // foreach ($bonuses3 as $bonus3) {
+      //   dump($bonuses);
+      // }
+      //
+      // $givers = Giver::all();
+      //
+      // // dump($givers);
+      //
+      // foreach ($givers as $giver) {
+      //   // dump($giver->bonuses);
+      // }
+      // die;
+
+
       $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
-
-
+      
       $giverPointsData = $users;
       $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
-
 
       $givenTotal = $this->bonusHelper->getTotal($users, 'giving_balance');
       $receivedTotal = $this->bonusHelper->getTotal($receiverPointsData, 'received_this_month');
@@ -76,8 +100,8 @@ class BonuslyLeaderboardController extends Controller
 
       // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
 
-      $expiresAt = Carbon::now()->addMinutes(10); // production
-      // $expiresAt = Carbon::now()->addMinutes(0); // development
+      // $expiresAt = Carbon::now()->addMinutes(10); // production
+      $expiresAt = Carbon::now()->addMinutes(0); // development
 
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
