@@ -66,7 +66,6 @@ class BonuslyLeaderboardController extends Controller
       return $b->received_this_month - $a->received_this_month;
       });
 
-
       $this->bonusHelper->setPositions($giverPointsData, 'giver');
       $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
 
