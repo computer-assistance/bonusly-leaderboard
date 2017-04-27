@@ -169,7 +169,6 @@ class BonuslyHelper
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
       ->first();
-
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           $pos = $this->checkForPositionChanges($pos, $key + 1);
