@@ -226,7 +226,6 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Position' => Illuminate\Support\Facades\Position::class,
-        'Carbon' => 'Carbon\Carbon',
 
     ],
 
