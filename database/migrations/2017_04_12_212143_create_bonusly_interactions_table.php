@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGiversTable extends Migration
+class CreateBonuslyInteractionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateGiversTable extends Migration
      */
     public function up()
     {
-        Schema::create('givers', function (Blueprint $table) {
-          $table->string('bonus_id');
-          $table->string('giver_id');
+        Schema::create('bonusly_interactions', function (Blueprint $table) {
+            $table->increments('id');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +26,6 @@ class CreateGiversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('givers');
+        Schema::dropIfExists('bonusly_interactions');
     }
 }

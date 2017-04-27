@@ -13,13 +13,8 @@ class Position extends Model
   */
   protected $table = 'positions';
 
-  /**
-   * The attributes that are mass assignable.
-   *
-   * @var array
-   */
   protected $fillable =   ['user_id', 'username', 'type', 'class', 'old_position', 'given_points', 'received_points'];
-
+  
   function getPreviousGiverPos($user_id) {
     return $this->find($user_id)->where('type', '=', 'giver')->pluck('old_position');
   }
