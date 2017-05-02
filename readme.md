@@ -38,19 +38,29 @@ We felt that this was a much-needed application as far as our organization was c
  5. Create a new Laravel application key by using the php artisan generate 'php artisan key:generate' - it is automatically added to the .env file
  6. Add your bonusly API key (mentioned in Preliminaries 2. above) to this line in the .env file | BONUSLY_TOKEN=null
       (Replace null with your Bonusly API key - no spaces between BONUSLY_TOKEN= and the key!)
- 7. a) An SQL database of somekind
-      Sqlite
-      Laravel ships with Sqlite and configuring it is very simple.
-      1. Go to the /database directory
-      2. Create a file called bonusly.sqlite (you can call it what you like but have to change the name in the name to your chosen name in the next step)
-      Mysql
-      1. Log into Mysq
-      2. Use the create database command - create database bonusly
- 7. b) Configuring that database
+ 7. a. A Mysql database
+      1. Log into Mysql
+      2. At the mysql command prompt use the create database command - "mysql> create database bonusly" (or any name you like but you have to use that name in step 7.b )
+ 7. b. Configuring Laravel to use this database
+      1. Open you .env file in your project root folder.
+      2. chenge the values below according to your setup
 
+      DB_CONNECTION=mysql
+      DB_HOST=127.0.0.1
+      DB_PORT=3306
+      DB_DATABASE=bonusly (or the name you chose in the 7.a.2)
+      DB_USERNAME=your_datbase_username
+      DB_PASSWORD=your_datbase_password
+  8. Run the php artisan migrate command to create the tables in the databsse
+  9. Restart MAMP/WAMP/LAMP or apache for your new environment varibles to be loaded and take effect`
 
-Once you have done that then you can either use pho artisan serve and go to 127.0.0.1:8000 or localhost:8000 (php artisan default port) to see the project or if you're using Linux/Apache then follow this link for instructions on how to add a new virtualhost (which means how to add a new website really!)
+Once you have done all of that then you can either use php artisan serve and go to 127.0.0.1:8000 or localhost:8000 (php artisan default port) to see the project or if you're using Linux/Apache then follow this link for instructions on how to add a new virtualhost (which means how to add a new website really!)
 https://httpd.apache.org/docs/2.4/vhosts/examples.html
 
 If you are using MAMP/WAMP/LAMP then you should just browse to your project through the WAMP/MAMP/LAMP sites page.
+
+#### Troubleshooting
+
+You may have to restart MAMP/WAMP/LAMP or apache again.
+If you permissions issues then make sure files and folders have the necessary permissions. One folder that can catch you out quite often is the /storage folder and its subfolders and files.
 
