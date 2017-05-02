@@ -28,7 +28,7 @@ class BonuslyHelper
   }
 
   function giveUrl() {
-    return    'https://bonus.ly/api/v1/users?show_financial_data=true';
+    return    'https://bonus.ly/api/v1/users?show_financial_data=true&limit=500';
   }
 
   function getMonth() {
@@ -171,7 +171,6 @@ class BonuslyHelper
       ->first();
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
-          $pos = $this->checkForPositionChanges($pos, $key + 1);
           if ($type == 'giver') {
             $pos->given_points = 100 - $d->giving_balance;
           }
@@ -179,6 +178,7 @@ class BonuslyHelper
           if ($type == 'receiver') {
             $pos->received_points = $d->received_this_month;
           }
+          $pos = $this->checkForPositionChanges($pos, $key + 1);
           $pos->save();
         }
       }
@@ -202,41 +202,32 @@ class BonuslyHelper
 
   function checkForPositionChanges($pos, $newPosition) {
     $oldPosition = $pos->old_position;
-    if ($pos->old_position == $newPosition) {
+    if ($oldPosition == $newPosition) {
       $pos->class = 'no_move fa fa-arrows-h';
     }
-    if ($newPosition > $pos->old_position) {
-      $pos->class = 'lower fa fa-arrow-down';
-      $pos->old_position = $newPosition;
-      $this->swapPlaces($pos, $oldPosition, $newPosition, 'down');
+    if ($oldPosition < $newPosition) {
+      $this->swapPlaces($pos, $newPosition, 'down');
     }
-    if ($newPosition < $pos->old_position) {
-      $pos->class = 'higher fa fa-arrow-up';
-      $pos->old_position = $newPosition;
-      $this->swapPlaces($pos, $oldPosition, $newPosition, 'up');
+    if ($oldPosition > $newPosition) {
+      $this->swapPlaces($pos, $newPosition, 'up');
     }
     return $pos;
   }
 
-  function swapPlaces($pos, $oldPosition, $newPosition, $direction) {
-    $swapping_pos = null;
-    // dd($pos, $oldPosition, $newPosition, $direction);
+  function swapPlaces($pos, $newPosition, $direction) {
+    // dd($pos, $newPosition, $direction);
 
     switch ($direction) {
+
       case 'down':
-      $swapping_pos = Position::where('old_position', '=', $pos->old_position + 1 )
-      ->where('type', '=', $pos->type)
-      ->first();
-      $swapping_pos->class = 'lower fa fa-arrow-down';
-      $swapping_pos->save();
-      break;
+      $pos->class = 'lower fa fa-arrow-down';
+      $pos->old_position = $newPosition;
+      return $pos;
+
       case 'up':
-      $swapping_pos = Position::where('old_position', '=', $pos->old_position - 1 )
-      ->where('type', '=', $pos->type)
-      ->first();
-      $swapping_pos->class = 'higher fa fa-arrow-up';
-      $swapping_pos->save();
-      break;
+      $pos->class = 'higher fa fa-arrow-up';
+      $pos->old_position = $newPosition;
+      return $pos;
 
       default:
       # code...

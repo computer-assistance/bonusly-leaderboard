@@ -43,6 +43,7 @@
         @foreach($giverPointsData as $d)
         <i class="position {{ \App\Models\Position::getCurrentGiverClass($d->id) }}"></i>
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
+        @if($divisor > 0)
         <div class="progress">
           <div class="progress-bar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ (((100 - $d->giving_balance)/$divisor) * $widthFactor) * 75 }}%;">
             {{ 100 - $d->giving_balance }}
@@ -50,6 +51,15 @@
           <div class="progress-shadow" style="width: {{ (((100 - $d->giving_balance)/$divisor) * $widthFactor) * 75 }}%;"></div>
           <label class="progress_label" style="width: 25%;">{{ ucfirst($d->display_name) }}</label>
         </div>
+        @else
+        <div class="progress">
+          <div class="progress-bar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: {{ (((100 - $d->giving_balance)) * $widthFactor) * 75 }}%;">
+            {{ 100 - $d->giving_balance }}
+          </div>
+          <div class="progress-shadow" style="width: {{ (((100 - $d->giving_balance)) * $widthFactor) * 75 }}%;"></div>
+          <label class="progress_label" style="width: 25%;">{{ ucfirst($d->display_name) }}</label>
+        </div>
+        @endif
         @endforeach
         </div>
       </div>
@@ -61,6 +71,7 @@
         @foreach($receiverPointsData as $d)
         <i class="position {{ \App\Models\Position::getCurrentReceiverClass($d->id) }}"></i>
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
+        @if($divisor > 0)
         <div class="progress">
           <div class="progress-bar" style="width: {{ (($d->received_this_month/$divisor) * $widthFactor) * 75 }}%;">
             {{ $d->received_this_month }}
@@ -68,6 +79,15 @@
           <div class="progress-shadow" style="width: {{ (($d->received_this_month/$divisor) * $widthFactor) * 75 }}%;"></div>
           <label class="progress_label" style="width: 25%;">{{ ucfirst($d->display_name) }}</label>
         </div>
+        @else
+        <div class="progress">
+          <div class="progress-bar" style="width: {{ (($d->received_this_month) * $widthFactor) * 75 }}%;">
+            {{ $d->received_this_month }}
+          </div>
+          <div class="progress-shadow" style="width: {{ (($d->received_this_month) * $widthFactor) * 75 }}%;"></div>
+          <label class="progress_label" style="width: 25%;">{{ ucfirst($d->display_name) }}</label>
+        </div>
+        @endif
         @endforeach
         </div>
       </div>

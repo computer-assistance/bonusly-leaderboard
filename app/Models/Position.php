@@ -14,7 +14,11 @@ class Position extends Model
   protected $table = 'positions';
 
   protected $fillable =   ['user_id', 'username', 'type', 'class', 'old_position', 'given_points', 'received_points'];
-  
+
+  protected $primaryKey = 'user_id';
+
+  public $incrementing = false;
+
   function getPreviousGiverPos($user_id) {
     return $this->find($user_id)->where('type', '=', 'giver')->pluck('old_position');
   }
