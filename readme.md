@@ -35,9 +35,9 @@ We felt that this was a much-needed application as far as our organization was c
  2. Cd into the created folder and run 'composer install'
  4. Copy .env.example to .env (Linux/Mac: cp .env.example .env | Windows cmd prompt: copy .env.example .env)
     The vast majority of the .env file can be left as is as most of it is unused in this project
- 5. Create a new Laravel application key by using the php artisan generate 'php artisan key:generate' - it is automatically added to the .env file
+ 5. Create a new Laravel application key by using the php artisan generate command 'php artisan key:generate' - it is automatically added to the .env file
  6. Add your bonusly API key (mentioned in Preliminaries 2. above) to this line in the .env file | BONUSLY_TOKEN=null
-      (Replace null with your Bonusly API key. There should be any spaces between BONUSLY_TOKEN= and the key!)
+      (Replace null with your Bonusly API key. There should NOT be any spaces between BONUSLY_TOKEN= and the key i.e. BONUSLY_TOKEN=your_key_here)
  7. a. A Mysql database
       1. Log into Mysql
       2. At the mysql command prompt use the create database command - "mysql> create database bonusly" (or any name you like but you have to use that name in step 7.b )
