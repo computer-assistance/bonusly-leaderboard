@@ -27,6 +27,7 @@ We felt that this was a much-needed application as far as our organization was c
  4. PHP 5.6 or above
  5. Composer
       Composer is a dependency manager for PHP. You can read more about composer from their official website. You can download composer from this link. We will not cover how to install composer here.
+ 6. An sql database of somekind
 
 #### Installing project
 
@@ -37,6 +38,16 @@ We felt that this was a much-needed application as far as our organization was c
  5. Create a new Laravel application key by using the php artisan generate 'php artisan key:generate' - it is automatically added to the .env file
  6. Add your bonusly API key (mentioned in Preliminaries 2. above) to this line in the .env file | BONUSLY_TOKEN=null
       (Replace null with your Bonusly API key - no spaces between BONUSLY_TOKEN= and the key!)
+ 7. a) An SQL database of somekind
+      Sqlite
+      Laravel ships with Sqlite and configuring it is very simple.
+      1. Go to the /database directory
+      2. Create a file called bonusly.sqlite (you can call it what you like but have to change the name in the name to your chosen name in the next step)
+      Mysql
+      1. Log into Mysq
+      2. Use the create database command - create database bonusly
+ 7. b) Configuring that database
+
 
 Once you have done that then you can either use pho artisan serve and go to 127.0.0.1:8000 or localhost:8000 (php artisan default port) to see the project or if you're using Linux/Apache then follow this link for instructions on how to add a new virtualhost (which means how to add a new website really!)
 https://httpd.apache.org/docs/2.4/vhosts/examples.html
