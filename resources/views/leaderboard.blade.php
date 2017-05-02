@@ -13,7 +13,7 @@
           <span class="my_day">{{ $thisDay }}</span>
         </div>
         <div class="col-lg-3 col-lg-offset-1">
-          <img src="img/Computer-Assistance-aifile_white_300x89_grad_green2.png" class="pull-right">
+          <img src="img/your_logo_300x89.png" class="pull-right">
         </div>
       </div>
     </div>
