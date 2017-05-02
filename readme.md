@@ -13,7 +13,7 @@ The app makes 2 calls to the Bonusly api
  1. Retrieve user data
  2. Retrieve monthly bonus data
 
-This data is then analysed by the application, summed and sorted and pushed out to view genrator
+This data is then analysed by the application, summed and sorted and then pushed out to the view genrator
 
 ## Motivation
 
@@ -26,8 +26,7 @@ We felt that this was a much-needed application as far as our organization was c
  1. An active subscription to Bonusly for your organisation/team
  2. An API key is required and is easily setup using their API dashboard at https://bonusly.gelato.io/ (you must sign in to your developer account)
  3. PHP 5.6 or above
- 4. Composer
-      Composer is a dependency manager for PHP. You can read more about composer from their official website. You can download composer from this link https://getcomposer.org/. We will not cover how to install composer here
+ 4. Composer. Composer is a dependency manager for PHP. You can read more about download composer from their official website at this link https://getcomposer.org/. We will not cover how to install composer here
  5. A Mysql database
 
 #### Installing project
