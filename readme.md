@@ -31,7 +31,7 @@ We felt that this was a much-needed application as far as our organization was c
 #### Installing project
 
  1. Clone this repo into your projects folder (/sitess or /www/html or /http folder or whatever you use - I use /projects)
- 2. Cd into the created folder (should be 'bonusly-board') and run 'composer install'.
+ 2. Cd into the created folder (should be 'bonusly-leaderboard') and run 'composer install'.
  4. Copy .env.example to .env (Linux/Mac: cp .env.example .env | Windows cmd prompt: copy .env.example .env)
     The vast majority of the .env file can be left as is as most of it is unused in this project.
  5. Create a new Laravel application key by using the php artisan generate 'php artisan key:generate' - it is automatically added to the .env file
