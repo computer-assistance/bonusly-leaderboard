@@ -41,6 +41,7 @@ class BonuslyLeaderboardController extends Controller
 
 
       $giverPointsData = $users;
+      // dd($giverPointsData);
       $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
 
 
