@@ -19,7 +19,7 @@ We felt that this was a much-needed application as far as our organization was c
 
 ## Installation
 
-### Preliminaries
+#### Preliminaries
 
  1. Sign up for Bonusly for your organisation/team.
  2. An API key is required and is easily setup using their API dashboard at https://bonusly.gelato.io/ (you must sign in to your developer account.)
