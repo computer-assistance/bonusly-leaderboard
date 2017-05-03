@@ -164,7 +164,10 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
-    // dd($data);
+
+    foreach ($data as $d) {
+      $d->class = null;
+    }
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
@@ -172,6 +175,7 @@ class BonuslyHelper
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           if ($type == 'giver') {
+            echo 'hit';
             $pos->given_points = 100 - $d->giving_balance;
           }
 
@@ -179,6 +183,7 @@ class BonuslyHelper
             $pos->received_points = $d->received_this_month;
           }
           $pos = $this->checkForPositionChanges($pos, $key + 1);
+          $d->class = $pos->class;
           $pos->save();
         }
       }
@@ -195,9 +200,11 @@ class BonuslyHelper
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
         }
+        $d->class = $pos->class;
         $pos->save();
       }
     }
+    return $data;
   }
 
   function checkForPositionChanges($pos, $newPosition) {
@@ -220,8 +227,8 @@ class BonuslyHelper
     switch ($direction) {
 
       case 'down':
-      $pos->class = 'lower fa fa-arrow-down';
       $pos->old_position = $newPosition;
+      $pos->class = 'lower fa fa-arrow-down';
       return $pos;
 
       case 'up':
