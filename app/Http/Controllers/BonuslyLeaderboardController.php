@@ -19,9 +19,8 @@ class BonuslyLeaderboardController extends Controller
 
   public function showBoard() {
 
-    if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
-    // if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
-
+    // if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
+    if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
       $divisor = 0;
       $givenTotal = 0;
       $receivedTotal = 0;
@@ -39,9 +38,7 @@ class BonuslyLeaderboardController extends Controller
       $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
 
-
       $giverPointsData = $users;
-      // dd($giverPointsData);
       $receiverPointsData = $this->bonusHelper->makeMonthlyBonusData($users, $bonuses);
 
 
@@ -67,8 +64,8 @@ class BonuslyLeaderboardController extends Controller
       return $b->received_this_month - $a->received_this_month;
       });
 
-      $this->bonusHelper->setPositions($giverPointsData, 'giver');
-      $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
+      $giverPointsData = $this->bonusHelper->setPositions($giverPointsData, 'giver');
+      $receiverPointsData = $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
 
 
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
