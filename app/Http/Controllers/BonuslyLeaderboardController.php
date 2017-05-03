@@ -19,8 +19,8 @@ class BonuslyLeaderboardController extends Controller
 
   public function showBoard() {
 
-    // if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
-    if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
+    if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
+    // if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
       $divisor = 0;
       $givenTotal = 0;
       $receivedTotal = 0;
@@ -73,8 +73,7 @@ class BonuslyLeaderboardController extends Controller
 
       // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
 
-      $expiresAt = Carbon::now()->addMinutes(10); // production
-      // $expiresAt = Carbon::now()->addMinutes(0); // development
+      $expiresAt = Carbon::now()->addMinutes(10);
 
       Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);

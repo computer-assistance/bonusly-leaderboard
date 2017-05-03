@@ -12,80 +12,6 @@ use App\Models\Position;
 class BonuslyHelper
 {
 
-  protected $testData = [
-  0 => [
-  "id" => "58ac031f7b8d8602dbc373f3",
-  "username" => "nadeem",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 3,
-  "given_points" => 10,
-  "received_points" => 36,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  1 => [
-  "id" => "5846d6b0387f8a036bc9351c",
-  "username" => "hristo",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 9,
-  "given_points" => 1,
-  "received_points" => 2,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  2 => [
-  "id" => "58a5d3901cd7d01bae01c427",
-  "username" => "ryan",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 2,
-  "given_points" => 30,
-  "received_points" => 72,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  3 => [
-  "id" => "5846d65acd7fb260ebf3ca1f",
-  "username" => "junaid",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 6,
-  "given_points" => 10,
-  "received_points" => 32,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  4 => [
-  "id" => "58a5d5681cd7d04d3001c5df",
-  "username" => "emma",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 7,
-  "given_points" => 25,
-  "received_points" => 13,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  5 => [
-  "id" => "5846d6ab387f8a0382c9351c",
-  "username" => "raphael",
-  "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 5,
-  "given_points" => 30,
-  "received_points" => 2,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ]
-];
-
   function receiveUrl() {
     // get current year and month
     $year  = Carbon::now()->year;
@@ -242,25 +168,10 @@ class BonuslyHelper
     foreach ($data as $d) {
       $d->class = null;
     }
-
-    $posData = $this->testData;
-      $new_array = array();
-      foreach ($posData as $to_obj)
-      {
-        $new_array[] = (object)$to_obj;
-      }
-    $posData = $new_array;
     foreach ($data as $key => $d) {
-      // $pos = Position::where('user_id', '=', $d->id)
-      // ->where('type', '=', $type)
-      // ->first();
-      foreach ($posData as $posD) {
-        // die;
-        if($posD->id == $d->id) {
-          $pos = $posD;
-          dump($posD->id == $d->id, $d->username);
-        }
-      }
+      $pos = Position::where('user_id', '=', $d->id)
+      ->where('type', '=', $type)
+      ->first();
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           if ($type == 'giver') {
@@ -272,15 +183,8 @@ class BonuslyHelper
             $pos->received_points = $d->received_this_month;
           }
           $pos = $this->checkForPositionChanges($pos, $key + 1);
-          // $pos->save();
           $d->class = $pos->class;
-
-          foreach ($posData as $posD) {
-            // die;
-            if($posD->id == $pos->id) {
-              $posD = $pos;
-            }
-          }
+          $pos->save();
         }
       }
       else {
@@ -296,6 +200,7 @@ class BonuslyHelper
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
         }
+        $d->class = $pos->class;
         $pos->save();
       }
     }
