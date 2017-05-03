@@ -71,28 +71,32 @@ class BonuslyLeaderboardController extends Controller
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
 
-      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
+      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor, $widthFactor);
 
       $expiresAt = Carbon::now()->addMinutes(10);
 
-      Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('giverPointsData', $giverPointsData, $expiresAt);
-      Cache::put('receivedTotal', $receivedTotal, $expiresAt);
-      Cache::put('widthFactor', $widthFactor, $expiresAt);
+      Cache::put('receiverPointsData', $receiverPointsData, $expiresAt);
       Cache::put('givenTotal', $givenTotal, $expiresAt);
+      Cache::put('receivedTotal', $receivedTotal, $expiresAt);
+      Cache::put('highestGiverPoints', $highestGiverPoints, $expiresAt);
+      Cache::put('highestReceiverPoints', $highestReceiverPoints, $expiresAt);
       Cache::put('thisMonth', $thisMonth, $expiresAt);
       Cache::put('divisor', $divisor, $expiresAt);
       Cache::put('thisDay', $thisDay, $expiresAt);
+      Cache::put('widthFactor', $widthFactor, $expiresAt);
     }
     else {
-      $receiverPointsData = Cache::get('receiverPointsData');
       $giverPointsData = Cache::get('giverPointsData');
-      $receivedTotal = Cache::get('receivedTotal');
-      $widthFactor = Cache::get('widthFactor');
+      $receiverPointsData = Cache::get('receiverPointsData');
       $givenTotal = Cache::get('givenTotal');
+      $receivedTotal = Cache::get('receivedTotal');
+      $highestGiverPoints = Cache::get('highestGiverPoints');
+      $highestReceiverPoints = Cache::get('highestReceiverPoints');
       $thisMonth = Cache::get('thisMonth');
       $divisor = Cache::get('divisor');
       $thisDay = Cache::get('thisDay');
+      $widthFactor = Cache::get('widthFactor');
     }
     return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay', 'widthFactor'));
   }
