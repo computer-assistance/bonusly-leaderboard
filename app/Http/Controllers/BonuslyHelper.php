@@ -165,25 +165,24 @@ class BonuslyHelper
 
   function setPositions($data, $type) {
 
-    foreach ($data as $d) {
-      $d->class = null;
-    }
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
       ->first();
       if($pos) {
+        $d = $this->getPositionClass($d, $pos);
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           if ($type == 'giver') {
-            echo 'hit';
             $pos->given_points = 100 - $d->giving_balance;
+            $pos = $this->checkForPositionChanges($pos, $key + 1);
+            $d->giver_class = $pos->class;
           }
 
           if ($type == 'receiver') {
             $pos->received_points = $d->received_this_month;
+            $pos = $this->checkForPositionChanges($pos, $key + 1);
+            $d->receiver_class = $pos->class;
           }
-          $pos = $this->checkForPositionChanges($pos, $key + 1);
-          $d->class = $pos->class;
           $pos->save();
         }
       }
@@ -196,15 +195,26 @@ class BonuslyHelper
         $pos->class = 'init fa fa-sun-o';
         if($type == 'giver') {
           $pos->given_points = 100 - $d->giving_balance;
+          $d->giver_class = $pos->class;
         }
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
+          $d->receiver_class = $pos->class;
         }
-        $d->class = $pos->class;
         $pos->save();
       }
     }
     return $data;
+  }
+
+  public function getPositionClass($d, $pos) {
+    if($pos->type == "giver") {
+      $d->giver_class = $pos->class;
+    }
+    if($pos->type == "receiver") {
+      $d->receiver_class = $pos->class;
+    }
+    return $d;
   }
 
   function checkForPositionChanges($pos, $newPosition) {
@@ -222,7 +232,6 @@ class BonuslyHelper
   }
 
   function swapPlaces($pos, $newPosition, $direction) {
-    // dd($pos, $newPosition, $direction);
 
     switch ($direction) {
 
@@ -235,11 +244,6 @@ class BonuslyHelper
       $pos->class = 'higher fa fa-arrow-up';
       $pos->old_position = $newPosition;
       return $pos;
-
-      default:
-      # code...
-      break;
     }
   }
-
 }
