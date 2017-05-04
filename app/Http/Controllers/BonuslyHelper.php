@@ -11,7 +11,6 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
-
   protected $testData = [
   0 => [
   "id" => "58ac031f7b8d8602dbc373f3",
@@ -87,6 +86,7 @@ class BonuslyHelper
 ];
 
   protected $unwantedUsers = array('raphael', 'emma', 'cathren', 'hugh', 'junaid', 'bot+5846d65caaf5cb3863ae6b06');
+  // protected $unwantedUsers = array(); // production
 
   function receiveUrl() {
     // get current year and month
@@ -243,33 +243,33 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
-    $pos = null;
+    // $pos = null;
+    //
+    // $posData = $this->testData;
+    //   $new_array = array();
+    //   foreach ($posData as $to_obj)
+    //   {
+    //     $new_array[] = (object)$to_obj;
+    //   }
+    // $posData = $new_array;
+    //
+    // foreach ($data as $key => $d) {
+      // foreach ($posData as $posD) {
+      //   // die;
+      //   if($posD->id == $d->id) {
+      //     $pos = $posD;
+      //     // dump($posD->id == $d->id, $d);
+      //   }
+      // }
 
-    $posData = $this->testData;
-      $new_array = array();
-      foreach ($posData as $to_obj)
-      {
-        $new_array[] = (object)$to_obj;
-      }
-    $posData = $new_array;
     foreach ($data as $key => $d) {
-
-      // $pos = Position::where('user_id', '=', $d->id)
-      // ->where('type', '=', $type)
-      // ->first();
-
-      foreach ($posData as $posD) {
-        // die;
-        if($posD->id == $d->id) {
-          $pos = $posD;
-          // dump($posD->id == $d->id, $d);
-        }
-      }
+      $pos = Position::where('user_id', '=', $d->id)
+      ->where('type', '=', $type)
+      ->first();
 
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           if ($type == 'giver') {
-            echo 'hit';
             $pos->given_points = 100 - $d->giving_balance;
             $pos = $this->checkForPositionChanges($pos, $key);
             $d->giver_class = $pos['class'];
@@ -283,7 +283,6 @@ class BonuslyHelper
             $pos = $pos['pos'];
             $pos->receiver_class = $d->receiver_class;
           }
-            dump($pos);
           $pos->save();
         } else {
           if ($type == 'giver') {
@@ -313,29 +312,24 @@ class BonuslyHelper
         $pos->save();
       }
     }
-    dump($data);
     return $data;
   }
 
   function checkForPositionChanges($pos, $newPosition) {
-    // $returnArray = array();
     $oldPosition = $pos->position;
     if ($oldPosition == $newPosition) {
       $class = 'no_move fa fa-arrows-h';
     }
     if ($oldPosition < $newPosition) {
       $pos = $this->swapPlaces($pos, $newPosition, 'down');
-      // $returnArray['class'] = $pos['class'];
     }
     if ($oldPosition > $newPosition) {
       $pos = $this->swapPlaces($pos, $newPosition, 'up');
     }
-    // $returnArray[] = $pos;
     return $pos;
   }
 
   function swapPlaces($pos, $newPosition, $direction) {
-    // dd($pos, $newPosition, $direction);
     $returnArray = array();
 
     switch ($direction) {
