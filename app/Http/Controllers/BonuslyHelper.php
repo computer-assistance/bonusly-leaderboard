@@ -11,82 +11,7 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
-  protected $testData = [
-  0 => [
-  "id" => "58ac031f7b8d8602dbc373f3",
-  "username" => "nadeem",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 3,
-  "given_points" => 10,
-  "received_points" => 36,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  1 => [
-  "id" => "5846d6b0387f8a036bc9351c",
-  "username" => "hristo",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 5,
-  "given_points" => 1,
-  "received_points" => 2,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  2 => [
-  "id" => "58a5d3901cd7d01bae01c427",
-  "username" => "ryan",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 2,
-  "given_points" => 30,
-  "received_points" => 72,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  3 => [
-  "id" => "5846d65acd7fb260ebf3ca1f",
-  "username" => "junaid",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 6,
-  "given_points" => 10,
-  "received_points" => 32,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  4 => [
-  "id" => "58a5d5681cd7d04d3001c5df",
-  "username" => "emma",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 7,
-  "given_points" => 25,
-  "received_points" => 13,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ],
-
-  5 => [
-  "id" => "5846d6ab387f8a0382c9351c",
-  "username" => "raphael",
-  "type" => "giver",
-  "giver_class" => "init fa fa-sun-o",
-  "position" => 5,
-  "given_points" => 30,
-  "received_points" => 2,
-  "updated_at" => "2017-04-12T18:05:29Z",
-  "created_at" => "2017-02-21T09:06:39Z"
-  ]
-];
-
-  protected $unwantedUsers = array('raphael', 'emma', 'cathren', 'hugh', 'junaid', 'bot+5846d65caaf5cb3863ae6b06');
-  // protected $unwantedUsers = array(); // production
+  protected $unwantedUsers = array(); // production
 
   function receiveUrl() {
     // get current year and month
@@ -243,25 +168,6 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
-    // $pos = null;
-    //
-    // $posData = $this->testData;
-    //   $new_array = array();
-    //   foreach ($posData as $to_obj)
-    //   {
-    //     $new_array[] = (object)$to_obj;
-    //   }
-    // $posData = $new_array;
-    //
-    // foreach ($data as $key => $d) {
-      // foreach ($posData as $posD) {
-      //   // die;
-      //   if($posD->id == $d->id) {
-      //     $pos = $posD;
-      //     // dump($posD->id == $d->id, $d);
-      //   }
-      // }
-
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)

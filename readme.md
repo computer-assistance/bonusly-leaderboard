@@ -59,8 +59,24 @@ https://httpd.apache.org/docs/2.4/vhosts/examples.html
 
 If you are using MAMP/WAMP/LAMP then you should just browse to your project through the WAMP/MAMP/LAMP sites page.
 
-#### Troubleshooting
+## Troubleshooting
 
 You may have to restart MAMP/WAMP/LAMP or apache again.
 If you permissions issues then make sure files and folders have the necessary permissions. One folder that can catch you out quite often is the /storage folder and its subfolders and files.
+
+## Special Features
+
+In the BonuslyHelper class
+
+There is an array that can be used to exclude users by adding their username
+
+protected $unwantedUsers = array(); // production
+
+Simply add the usernames as strings like so
+
+$unwantedUsers = array('unwanted_1', 'unwanted_2', 'unwanted_3');
+
+A list of usernames for your organisation is easily obtained using the Bonusly API explorer using the settings below
+
+![bonusly api screenshot](http://url/to/img.png)
 
