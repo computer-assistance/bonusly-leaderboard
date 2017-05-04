@@ -19,8 +19,8 @@ class BonuslyLeaderboardController extends Controller
 
   public function showBoard() {
 
-    // if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
-    if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
+    if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
+    // if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
       $divisor = 0;
       $givenTotal = 0;
       $receivedTotal = 0;
@@ -35,7 +35,7 @@ class BonuslyLeaderboardController extends Controller
       $thisDay = $this->bonusHelper->getDayNumber();
 
 
-      $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
+      $users = $this->bonusHelper->makeUsers();
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
 
       $giverPointsData = $users;
@@ -64,6 +64,9 @@ class BonuslyLeaderboardController extends Controller
       return $b->received_this_month - $a->received_this_month;
       });
 
+      $currentUsersOnLeaderboard = $this->bonusHelper->setCurrentUsersOnLeaderboard($giverPointsData);
+
+
       $giverPointsData = $this->bonusHelper->setPositions($giverPointsData, 'giver');
       $receiverPointsData = $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
 
@@ -71,7 +74,7 @@ class BonuslyLeaderboardController extends Controller
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
 
-      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
+      dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor);
 
       $expiresAt = Carbon::now()->addMinutes(10); // production
       // $expiresAt = Carbon::now()->addMinutes(0); // development
@@ -95,6 +98,7 @@ class BonuslyLeaderboardController extends Controller
       $divisor = Cache::get('divisor');
       $thisDay = Cache::get('thisDay');
     }
+    // dd($giverPointsData,$receiverPointsData);
     return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay', 'widthFactor'));
   }
 }

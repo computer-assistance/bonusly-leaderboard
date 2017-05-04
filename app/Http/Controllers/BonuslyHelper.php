@@ -17,8 +17,8 @@ class BonuslyHelper
   "id" => "58ac031f7b8d8602dbc373f3",
   "username" => "nadeem",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 3,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 3,
   "given_points" => 10,
   "received_points" => 36,
   "updated_at" => "2017-04-12T18:05:29Z",
@@ -29,8 +29,8 @@ class BonuslyHelper
   "id" => "5846d6b0387f8a036bc9351c",
   "username" => "hristo",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 9,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 5,
   "given_points" => 1,
   "received_points" => 2,
   "updated_at" => "2017-04-12T18:05:29Z",
@@ -41,8 +41,8 @@ class BonuslyHelper
   "id" => "58a5d3901cd7d01bae01c427",
   "username" => "ryan",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 2,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 2,
   "given_points" => 30,
   "received_points" => 72,
   "updated_at" => "2017-04-12T18:05:29Z",
@@ -53,8 +53,8 @@ class BonuslyHelper
   "id" => "5846d65acd7fb260ebf3ca1f",
   "username" => "junaid",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 6,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 6,
   "given_points" => 10,
   "received_points" => 32,
   "updated_at" => "2017-04-12T18:05:29Z",
@@ -65,8 +65,8 @@ class BonuslyHelper
   "id" => "58a5d5681cd7d04d3001c5df",
   "username" => "emma",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 7,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 7,
   "given_points" => 25,
   "received_points" => 13,
   "updated_at" => "2017-04-12T18:05:29Z",
@@ -77,14 +77,16 @@ class BonuslyHelper
   "id" => "5846d6ab387f8a0382c9351c",
   "username" => "raphael",
   "type" => "giver",
-  "class" => "init fa fa-sun-o",
-  "old_position" => 5,
+  "giver_class" => "init fa fa-sun-o",
+  "position" => 5,
   "given_points" => 30,
   "received_points" => 2,
   "updated_at" => "2017-04-12T18:05:29Z",
   "created_at" => "2017-02-21T09:06:39Z"
   ]
 ];
+
+  protected $unwantedUsers = array('raphael', 'emma', 'cathren', 'hugh', 'junaid', 'bot+5846d65caaf5cb3863ae6b06');
 
   function receiveUrl() {
     // get current year and month
@@ -198,15 +200,18 @@ class BonuslyHelper
     return $users;
   }
 
-  function removeWelcomeUser($users) {
-    $index = 0;
+  function makeUsers() {
+    return $this->removeUnwantedUsers($this->makeBonuslyApiCall($this->giveUrl()));
+  }
+
+  function removeUnwantedUsers($users) {
+    $returnArray = array();
     foreach ($users as $user) {
-      if ($user->username == 'bot+5846d65caaf5cb3863ae6b06') { // remove this user otherwise results are out by 100,000
-        unset($users[$index]);
+      if (!in_array($user->username, $this->unwantedUsers, true)) {
+        $returnArray[] = $user;
       }
-      $index ++;
     }
-    return $users;
+    return $returnArray;
   }
 
   function sanitisePoints($data, $prop) {
@@ -238,10 +243,7 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
-
-    foreach ($data as $d) {
-      $d->class = null;
-    }
+    $pos = null;
 
     $posData = $this->testData;
       $new_array = array();
@@ -251,35 +253,44 @@ class BonuslyHelper
       }
     $posData = $new_array;
     foreach ($data as $key => $d) {
+
       // $pos = Position::where('user_id', '=', $d->id)
       // ->where('type', '=', $type)
       // ->first();
+
       foreach ($posData as $posD) {
         // die;
         if($posD->id == $d->id) {
           $pos = $posD;
-          dump($posD->id == $d->id, $d->username);
+          // dump($posD->id == $d->id, $d);
         }
       }
+
       if($pos) {
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
           if ($type == 'giver') {
             echo 'hit';
             $pos->given_points = 100 - $d->giving_balance;
+            $pos = $this->checkForPositionChanges($pos, $key);
+            $d->giver_class = $pos['class'];
+            $pos = $pos['pos'];
+            $pos->giver_class = $d->giver_class;
           }
-
           if ($type == 'receiver') {
             $pos->received_points = $d->received_this_month;
+            $pos = $this->checkForPositionChanges($pos, $key);
+            $d->receiver_class = $pos['class'];
+            $pos = $pos['pos'];
+            $pos->receiver_class = $d->receiver_class;
           }
-          $pos = $this->checkForPositionChanges($pos, $key + 1);
-          // $pos->save();
-          $d->class = $pos->class;
-
-          foreach ($posData as $posD) {
-            // die;
-            if($posD->id == $pos->id) {
-              $posD = $pos;
-            }
+            dump($pos);
+          $pos->save();
+        } else {
+          if ($type == 'giver') {
+            $d->giver_class = $pos->giver_class;
+          }
+          if ($type == 'receiver') {
+            $d->receiver_class = $pos->receiver_class;
           }
         }
       }
@@ -288,53 +299,67 @@ class BonuslyHelper
         $pos->user_id = $d->id;
         $pos->type = $type;
         $pos->username = $d->display_name;
-        $pos->old_position = $key + 1;
-        $pos->class = 'init fa fa-sun-o';
+        $pos->position = $key;
         if($type == 'giver') {
           $pos->given_points = 100 - $d->giving_balance;
+          $d->giver_class = 'init fa fa-sun-o';
+          $pos->giver_class = $d->giver_class;
         }
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
+          $d->receiver_class = 'init fa fa-sun-o';
+          $pos->receiver_class = $d->receiver_class;
         }
         $pos->save();
       }
     }
+    dump($data);
     return $data;
   }
 
   function checkForPositionChanges($pos, $newPosition) {
-    $oldPosition = $pos->old_position;
+    // $returnArray = array();
+    $oldPosition = $pos->position;
     if ($oldPosition == $newPosition) {
-      $pos->class = 'no_move fa fa-arrows-h';
+      $class = 'no_move fa fa-arrows-h';
     }
     if ($oldPosition < $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'down');
+      $pos = $this->swapPlaces($pos, $newPosition, 'down');
+      // $returnArray['class'] = $pos['class'];
     }
     if ($oldPosition > $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'up');
+      $pos = $this->swapPlaces($pos, $newPosition, 'up');
     }
+    // $returnArray[] = $pos;
     return $pos;
   }
 
   function swapPlaces($pos, $newPosition, $direction) {
     // dd($pos, $newPosition, $direction);
+    $returnArray = array();
 
     switch ($direction) {
 
       case 'down':
-      $pos->old_position = $newPosition;
-      $pos->class = 'lower fa fa-arrow-down';
-      return $pos;
+      $returnArray['class'] = 'lower fa fa-arrow-down';
+      $pos->position = $newPosition;
+      $returnArray['pos'] = $pos;
+      return $returnArray;
 
       case 'up':
-      $pos->class = 'higher fa fa-arrow-up';
-      $pos->old_position = $newPosition;
-      return $pos;
+      $returnArray['class'] = 'higher fa fa-arrow-up';
+      $pos->position = $newPosition;
+      $returnArray['pos'] = $pos;
+      return $returnArray;
 
       default:
       # code...
       break;
     }
+  }
+
+  function setCurrentUsersOnLeaderboard() {
+    // echo 'set current users';
   }
 
 }
