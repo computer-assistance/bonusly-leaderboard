@@ -66,9 +66,10 @@ If you permissions issues then make sure files and folders have the necessary pe
 
 ## Special Features
 
-In the BonuslyHelper class
+#### Exclude undesirable users
+Your organisation may have users that are not eligible for bonuses or not part of the scheme yet still have a bonusly account/profile such as managers or administrators. To exclude them from the results of any api calls the feature below was added.
 
-There is an array that can be used to exclude users by adding their username
+In the BonuslyHelper class there is an array that can be used to exclude users by adding their username
 
 protected $unwantedUsers = array(); // production
 
@@ -78,5 +79,5 @@ $unwantedUsers = array('unwanted_1', 'unwanted_2', 'unwanted_3');
 
 A list of usernames for your organisation is easily obtained using the Bonusly API explorer using the settings below
 
-![bonusly api screenshot](http://url/to/img.png)
+![bonusly api screenshot](https://github.com/computer-assistance/bonusly-leaderboard/blob/github-v2/public/img/bonuslu_user_request_api.png)
 
