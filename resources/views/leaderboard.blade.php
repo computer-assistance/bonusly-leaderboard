@@ -41,7 +41,7 @@
       <div class="col-lg-10 col-lg-offset-4">
         <div class="leaderboard_bars">
         @foreach($giverPointsData as $d)
-        <i class="position {{ \App\Models\Position::getCurrentGiverClass($d->id) }}"></i>
+        <i class="position {{ $d->giver_class }}"></i>
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
         @if($divisor > 0)
         <div class="progress">
@@ -69,7 +69,7 @@
       <div class="col-lg-10 col-lg-offset-2">
         <div class="leaderboard_bars">
         @foreach($receiverPointsData as $d)
-        <i class="position {{ \App\Models\Position::getCurrentReceiverClass($d->id) }}"></i>
+        <i class="position {{ $d->receiver_class }}"></i>
         <span class="progress-bar-img"><img src="{{ $d->profile_pic_url }}"></span>
         @if($divisor > 0)
         <div class="progress">

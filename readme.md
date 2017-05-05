@@ -59,12 +59,27 @@ We felt that this was a much-needed application as far as our organization was c
   10. b. Modify resources/views/leaderboard.blade.php <img src="img/your_image_filename.img_ext" class="pull-right">
       (img_ext: choose the correct extension for your image file type eg. .png, .gif, .svg etc)
 
+      Once you have done all of that then you can either use php artisan serve and go to 127.0.0.1:8000 or localhost:8000 (php artisan default port) to see the project or if you're using Linux/Apache then follow this link for instructions on how to add a new virtualhost (how to add a new site!)
+      https://httpd.apache.org/docs/2.4/vhosts/examples.html (again restart apache afterwards)
 
-Once you have done all of that then you can either use php artisan serve and go to 127.0.0.1:8000 or localhost:8000 (php artisan default port) to see the project or if you're using Linux/Apache then follow this link for instructions on how to add a new virtualhost (how to add a new site!)
-https://httpd.apache.org/docs/2.4/vhosts/examples.html (again restart apache afterwards)
+## Special Features
 
-If you are using MAMP/WAMP/LAMP then you should just browse to your project through the WAMP/MAMP/LAMP sites page
+#### Exclude undesirable users
+      Your organisation may have users that are not eligible for bonuses or not part of the scheme yet still have a bonusly account/profile such as managers or administrators. To exclude them from the results of any api calls the feature below was added.
 
-#### Troubleshooting
+      In the BonuslyHelper class there is an array that can be used to exclude users by simply adding their username to it.
+
+      protected $unwantedUsers = array()
+
+      Simply add the usernames as strings like so:
+
+      protected $unwantedUsers = array('unwanted_1', 'unwanted_2', 'unwanted_3');
+
+      A list of usernames for your organisation is easily obtained using the Bonusly API explorer using the settings below
+
+      ![bonusly api screenshot](https://github.com/computer-assistance/bonusly-leaderboard/blob/github-v2/public/img/bonuslu_user_request_api.png)
+
+## Troubleshooting
 
 You may have to restart MAMP/WAMP/LAMP or apache again. If you have permissions issues then make sure files and folders have the necessary permissions. One folder that can catch you out quite often is the /storage folder and its subfolders and files
+
