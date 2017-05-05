@@ -79,5 +79,5 @@ protected $unwantedUsers = array('unwanted_1', 'unwanted_2', 'unwanted_3');
 
 A list of usernames for your organisation is easily obtained using the Bonusly API explorer using the settings below
 
-![bonusly api screenshot](https://github.com/computer-assistance/bonusly-leaderboard/blob/github-v2/public/img/bonuslu_user_request_api.png)
+![bonusly api screenshot](https://github.com/computer-assistance/bonusly-leaderboard/blob/master/public/img/bonusly_user_request_api.png)
 
