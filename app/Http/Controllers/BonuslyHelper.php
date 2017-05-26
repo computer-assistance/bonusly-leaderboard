@@ -52,7 +52,29 @@ class BonuslyHelper
     $content = json_decode($hostResponse->getContent());
 
     $results = $content->result;
+    // if (strpos($url, "bonuses")) {
+    //   $results = $this->makeTestBonuses($results);
+    // }
+    return $results;
+  }
 
+  public function makeTestBonuses($results)
+  {
+    $min=0;
+    $max = count($results);
+    // $index =
+    $result = $results[rand($min,$max)];
+    // echo $result->id;
+    $result->id = str_shuffle($result->id);
+    // dump($result);
+    echo "giver-> " . $result->giver->username ."\r\n";
+    foreach ($result->receivers as $receiver) {
+      echo "receiver-> " . $result->giver->username ."\r\n";
+    }
+    // echo "\n" . $result->id;
+    $results[] = $result;
+    // dd(count($results));
+    // die;
     return $results;
   }
 
@@ -172,16 +194,17 @@ class BonuslyHelper
       if($pos) {
         $d = $this->getPositionClass($d, $pos);
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
+
           if ($type == 'giver') {
             $pos->given_points = 100 - $d->giving_balance;
-            $pos = $this->checkForPositionChanges($pos, $key + 1);
-            $d->giver_class = $pos->class;
+            $pos = $this->checkForPositionChanges($pos, $key + 1, 'giver_class');
+            $d->giver_class = $pos->giver_class;
           }
 
           if ($type == 'receiver') {
             $pos->received_points = $d->received_this_month;
-            $pos = $this->checkForPositionChanges($pos, $key + 1);
-            $d->receiver_class = $pos->class;
+            $pos = $this->checkForPositionChanges($pos, $key + 1, 'receiver_class');
+            $d->receiver_class = $pos->receiver_class;
           }
           $pos->save();
         }
@@ -192,14 +215,17 @@ class BonuslyHelper
         $pos->type = $type;
         $pos->username = $d->display_name;
         $pos->old_position = $key + 1;
-        $pos->class = 'init fa fa-sun-o';
+        $pos->giver_class = 'init fa fa-sun-o';
+        $pos->receiver_class = 'init fa fa-sun-o';
+
         if($type == 'giver') {
           $pos->given_points = 100 - $d->giving_balance;
-          $d->giver_class = $pos->class;
+          $d->giver_class = $pos->giver_class;
         }
+
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
-          $d->receiver_class = $pos->class;
+          $d->receiver_class = $pos->receiver_class;
         }
         $pos->save();
       }
@@ -209,39 +235,39 @@ class BonuslyHelper
 
   public function getPositionClass($d, $pos) {
     if($pos->type == "giver") {
-      $d->giver_class = $pos->class;
+      $d->giver_class = $pos->giver_class;
     }
     if($pos->type == "receiver") {
-      $d->receiver_class = $pos->class;
+      $d->receiver_class = $pos->receiver_class;
     }
     return $d;
   }
 
-  function checkForPositionChanges($pos, $newPosition) {
+  function checkForPositionChanges($pos, $newPosition, $type) {
     $oldPosition = $pos->old_position;
     if ($oldPosition == $newPosition) {
-      $pos->class = 'no_move fa fa-arrows-h';
+      $pos->$type = 'no_move fa fa-arrows-h';
     }
     if ($oldPosition < $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'down');
+      $this->swapPlaces($pos, $newPosition, 'down', $type);
     }
     if ($oldPosition > $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'up');
+      $this->swapPlaces($pos, $newPosition, 'up', $type);
     }
     return $pos;
   }
 
-  function swapPlaces($pos, $newPosition, $direction) {
+  function swapPlaces($pos, $newPosition, $direction, $type) {
 
     switch ($direction) {
 
       case 'down':
       $pos->old_position = $newPosition;
-      $pos->class = 'lower fa fa-arrow-down';
+      $pos->$type = 'lower fa fa-arrow-down';
       return $pos;
 
       case 'up':
-      $pos->class = 'higher fa fa-arrow-up';
+      $pos->$type = 'higher fa fa-arrow-up';
       $pos->old_position = $newPosition;
       return $pos;
     }
