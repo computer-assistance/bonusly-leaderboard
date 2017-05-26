@@ -19,8 +19,8 @@ class BonuslyLeaderboardController extends Controller
 
   public function showBoard() {
 
-    // if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
-    if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
+     if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
+    //if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
       $divisor = 0;
       $givenTotal = 0;
       $receivedTotal = 0;
