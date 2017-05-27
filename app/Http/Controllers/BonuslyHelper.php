@@ -53,29 +53,7 @@ class BonuslyHelper
     $content = json_decode($hostResponse->getContent());
 
     $results = $content->result;
-    // if (strpos($url, "bonuses")) {
-    //   $results = $this->makeTestBonuses($results);
-    // }
-    return $results;
-  }
 
-  public function makeTestBonuses($results)
-  {
-    $min=0;
-    $max = count($results);
-    // $index =
-    $result = $results[rand($min,$max)];
-    // echo $result->id;
-    $result->id = str_shuffle($result->id);
-    // dump($result);
-    echo "giver-> " . $result->giver->username ."\r\n";
-    foreach ($result->receivers as $receiver) {
-      echo "receiver-> " . $result->giver->username ."\r\n";
-    }
-    // echo "\n" . $result->id;
-    $results[] = $result;
-    // dd(count($results));
-    // die;
     return $results;
   }
 
