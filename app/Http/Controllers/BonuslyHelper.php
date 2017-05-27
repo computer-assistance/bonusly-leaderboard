@@ -11,7 +11,7 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
-  protected $unwantedUsers = array(); // production
+  protected $unwantedUsers = array();
 
   function receiveUrl() {
     // get current year and month
@@ -168,35 +168,27 @@ class BonuslyHelper
   }
 
   function setPositions($data, $type) {
+
     foreach ($data as $key => $d) {
       $pos = Position::where('user_id', '=', $d->id)
       ->where('type', '=', $type)
       ->first();
-
       if($pos) {
+        $d = $this->getPositionClass($d, $pos);
         if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
+
           if ($type == 'giver') {
             $pos->given_points = 100 - $d->giving_balance;
-            $pos = $this->checkForPositionChanges($pos, $key);
-            $d->giver_class = $pos['class'];
-            $pos = $pos['pos'];
-            $pos->giver_class = $d->giver_class;
-          }
-          if ($type == 'receiver') {
-            $pos->received_points = $d->received_this_month;
-            $pos = $this->checkForPositionChanges($pos, $key);
-            $d->receiver_class = $pos['class'];
-            $pos = $pos['pos'];
-            $pos->receiver_class = $d->receiver_class;
-          }
-          $pos->save();
-        } else {
-          if ($type == 'giver') {
+            $pos = $this->checkForPositionChanges($pos, $key + 1, 'giver_class');
             $d->giver_class = $pos->giver_class;
           }
+
           if ($type == 'receiver') {
+            $pos->received_points = $d->received_this_month;
+            $pos = $this->checkForPositionChanges($pos, $key + 1, 'receiver_class');
             $d->receiver_class = $pos->receiver_class;
           }
+          $pos->save();
         }
       }
       else {
@@ -204,16 +196,18 @@ class BonuslyHelper
         $pos->user_id = $d->id;
         $pos->type = $type;
         $pos->username = $d->display_name;
-        $pos->position = $key;
+        $pos->old_position = $key + 1;
+        $pos->giver_class = 'init fa fa-sun-o';
+        $pos->receiver_class = 'init fa fa-sun-o';
+
         if($type == 'giver') {
           $pos->given_points = 100 - $d->giving_balance;
-          $d->giver_class = 'init fa fa-sun-o';
-          $pos->giver_class = $d->giver_class;
+          $d->giver_class = $pos->giver_class;
         }
+
         if($type == 'receiver') {
           $pos->received_points = $d->received_this_month;
-          $d->receiver_class = 'init fa fa-sun-o';
-          $pos->receiver_class = $d->receiver_class;
+          $d->receiver_class = $pos->receiver_class;
         }
         $pos->save();
       }
@@ -221,45 +215,43 @@ class BonuslyHelper
     return $data;
   }
 
-  function checkForPositionChanges($pos, $newPosition) {
-    $oldPosition = $pos->position;
+  public function getPositionClass($d, $pos) {
+    if($pos->type == "giver") {
+      $d->giver_class = $pos->giver_class;
+    }
+    if($pos->type == "receiver") {
+      $d->receiver_class = $pos->receiver_class;
+    }
+    return $d;
+  }
+
+  function checkForPositionChanges($pos, $newPosition, $type) {
+    $oldPosition = $pos->old_position;
     if ($oldPosition == $newPosition) {
-      $class = 'no_move fa fa-arrows-h';
+      $pos->$type = 'no_move fa fa-arrows-h';
     }
     if ($oldPosition < $newPosition) {
-      $pos = $this->swapPlaces($pos, $newPosition, 'down');
+      $this->swapPlaces($pos, $newPosition, 'down', $type);
     }
     if ($oldPosition > $newPosition) {
-      $pos = $this->swapPlaces($pos, $newPosition, 'up');
+      $this->swapPlaces($pos, $newPosition, 'up', $type);
     }
     return $pos;
   }
 
-  function swapPlaces($pos, $newPosition, $direction) {
-    $returnArray = array();
+  function swapPlaces($pos, $newPosition, $direction, $type) {
 
     switch ($direction) {
 
       case 'down':
-      $returnArray['class'] = 'lower fa fa-arrow-down';
-      $pos->position = $newPosition;
-      $returnArray['pos'] = $pos;
-      return $returnArray;
+      $pos->old_position = $newPosition;
+      $pos->$type = 'lower fa fa-arrow-down';
+      return $pos;
 
       case 'up':
-      $returnArray['class'] = 'higher fa fa-arrow-up';
-      $pos->position = $newPosition;
-      $returnArray['pos'] = $pos;
-      return $returnArray;
-
-      default:
-      # code...
-      break;
+      $pos->$type = 'higher fa fa-arrow-up';
+      $pos->old_position = $newPosition;
+      return $pos;
     }
   }
-
-  function setCurrentUsersOnLeaderboard() {
-    // echo 'set current users';
-  }
-
 }
