@@ -11,6 +11,7 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
+  protected $unwantedUsers = array('raphael', 'emma', 'cathren', 'hugh', 'junaid', 'bot+5846d65caaf5cb3863ae');
 
   function receiveUrl() {
     // get current year and month
@@ -144,6 +145,20 @@ class BonuslyHelper
       }
     }
     return $users;
+  }
+
+  function makeUsers() {
+    return $this->removeUnwantedUsers($this->makeBonuslyApiCall($this->giveUrl()));
+  }
+
+  function removeUnwantedUsers($users) {
+    $returnArray = array();
+    foreach ($users as $user) {
+      if (!in_array($user->username, $this->unwantedUsers, true)) {
+        $returnArray[] = $user;
+      }
+    }
+    return $returnArray;
   }
 
   function removeWelcomeUser($users) {
