@@ -35,7 +35,6 @@ class BonuslyLeaderboardController extends Controller
       $thisDay = $this->bonusHelper->getDayNumber();
 
 
-
       $users = $this->bonusHelper->makeUsers();
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
 
@@ -72,7 +71,7 @@ class BonuslyLeaderboardController extends Controller
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
       $receiverPointsData = array_slice($receiverPointsData,0, 10);
 
-      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $divisor, $widthFactor);
+      // dd($giverPointsData, $receiverPointsData, $givenTotal, $receivedTotal, $highestGiverPoints, $highestReceiverPoints, $thisMonth, $divisor, $thisDay,   $widthFactor);
 
       $expiresAt = Carbon::now()->addMinutes(10);
 

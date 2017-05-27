@@ -161,17 +161,6 @@ class BonuslyHelper
     return $returnArray;
   }
 
-  function removeWelcomeUser($users) {
-    $index = 0;
-    foreach ($users as $user) {
-      if ($user->username == 'bot+5846d65caaf5cb3863ae6b06') { // remove this user otherwise results are out by 100,000
-        unset($users[$index]);
-      }
-      $index ++;
-    }
-    return $users;
-  }
-
   function sanitisePoints($data, $prop) {
 
     switch ($prop) {
