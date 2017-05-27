@@ -35,7 +35,8 @@ class BonuslyLeaderboardController extends Controller
       $thisDay = $this->bonusHelper->getDayNumber();
 
 
-      $users = $this->bonusHelper->removeWelcomeUser($this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->giveUrl()));
+
+      $users = $this->bonusHelper->makeUsers();
       $bonuses = $this->bonusHelper->makeBonuslyApiCall($this->bonusHelper->receiveUrl());
 
       $giverPointsData = $users;
