@@ -11,7 +11,7 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
-  protected $unwantedUsers = array('raphael', 'emma', 'cathren', 'hugh', 'junaid', 'bot+5846d65caaf5cb3863ae');
+  protected $unwantedUsers = array();
 
   function receiveUrl() {
     // get current year and month
