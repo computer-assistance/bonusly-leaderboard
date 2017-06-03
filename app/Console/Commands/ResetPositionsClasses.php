@@ -18,14 +18,14 @@ class ResetPositionsClasses extends Command
      *
      * @var string
      */
-    protected $command_title = 'Set giver and receiver Positions classes';
+    protected $command_title = 'Reset giver and receiver Positions classes';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'pos:rstclsss';
+    protected $signature = 'pos:rstcls';
 
     /**
      * The console command description.
@@ -48,7 +48,7 @@ class ResetPositionsClasses extends Command
      */
     public function handle()
     {
-        echo "hotwire()";
+      Position::truncate();
     }
 
 }
