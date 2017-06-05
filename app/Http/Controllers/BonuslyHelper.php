@@ -25,11 +25,11 @@ class BonuslyHelper
     // get month end date
     $end = Carbon::parse($date)->endOfMonth()->toDateString();
 
-    return 'https://bonus.ly/api/v1/bonuses' . '?start_time=' . $start .'&end_time=' . $end . '&limit=500&include_children=false';
+    return 'https://bonus.ly/api/v1/bonuses' . '?start_time=' . $start .'&end_time=' . $end . '&limit=499&include_children=false';
   }
 
   function giveUrl() {
-    return    'https://bonus.ly/api/v1/users?show_financial_data=true&limit=500';
+    return    'https://bonus.ly/api/v1/users?show_financial_data=true&limit=499';
   }
 
   function getMonth() {
