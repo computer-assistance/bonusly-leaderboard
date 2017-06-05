@@ -4,7 +4,7 @@
 
 Bonusly leaderboard is an open source Laravel (5.4) project developed in-house at Computer Assistance, Oxford, UK after we signed up for Bonusly (https://bonus.ly/ - peer to peer team-member recognition and rewards)
 
-We realised early on that the bonus notifications provided by Bonusly were not going to suit our needs so rolled this project out in the space of a week or so
+We realised early on that the bonus notifications provided by Bonusly were not going to suit our needs so rolled this project out in the space of a week or so.
 
 ## Example
 <img src="https://github.com/computer-assistance/bonusly-leaderboard/blob/master/bonusly-thumb-300x190.png" style="text-align:center;">
@@ -13,11 +13,11 @@ The app makes 2 calls to the Bonusly api
  1. Retrieve user data
  2. Retrieve monthly bonus data
 
-This data is then analysed by the application, summed and sorted and then pushed out to the view genrator
+This data is then analysed by the application, summed and sorted and then pushed out to the view generator.
 
 ## Motivation
 
-We felt that this was a much-needed application as far as our organization was concerned and feel this adds an at-a-glance, real-time feature, thereby adding value to our Bonusly usage thus enhancing their project's worth to us
+We felt that this was a much-needed application as far as our organization was concerned and feel this adds an at-a-glance, real-time feature, thereby adding value to our Bonusly usage thus enhancing their project's worth to us.
 
 ## Installation
 
@@ -53,8 +53,8 @@ We felt that this was a much-needed application as far as our organization was c
       DB_PASSWORD=your_database_password
 
   8. Run the php artisan migrate command to create the tables in the database
-  9. Restart MAMP/WAMP/LAMP or apache for your new environment varibles to be loaded and take effect
-  10. Save your compnay logo image as a .png or .gif file in the public/img folder
+  9. Restart MAMP/WAMP/LAMP or apache for your new environment variables to be loaded and take effect
+  10. Save your company logo image as a .png or .gif file in the public/img folder
       (Image guidelines:
         1. Use an image format that supports a transparent background (not jpeg or your logo will have a box around it)
         2. Make your Logo 310 x 90 pixels or close to that.
