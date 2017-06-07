@@ -11,7 +11,6 @@ use App\Models\Position;
 
 class BonuslyHelper
 {
-  protected $unwantedUsers = array();
 
   function receiveUrl() {
     // get current year and month
@@ -130,9 +129,12 @@ class BonuslyHelper
   }
 
   function removeUnwantedUsers($users) {
+
+    $unwantedUsers = explode('-', config('bonusly.unwantedUsers'));
+
     $returnArray = array();
     foreach ($users as $user) {
-      if (!in_array($user->username, $this->unwantedUsers, true)) {
+      if (!in_array($user->username, $unwantedUsers, true)) {
         $returnArray[] = $user;
       }
     }
