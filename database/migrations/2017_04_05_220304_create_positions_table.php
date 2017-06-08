@@ -15,10 +15,7 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function (Blueprint $table) {
           $table->string('user_id');
-          $table->string('username');
-          $table->string('type');
-          $table->string('giver_class')->nullable();
-          $table->string('receiver_class')->nullable();
+          $table->string('type')->nullable();
           $table->integer('old_position')->nullable();
           $table->integer('given_points')->nullable();
           $table->integer('received_points')->nullable();

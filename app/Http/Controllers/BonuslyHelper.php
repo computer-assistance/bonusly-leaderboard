@@ -169,91 +169,56 @@ class BonuslyHelper
     }
   }
 
-  function setPositions($data, $type) {
+  function checkForPositionChanges($userArray, $type) {
+// dd($userArray);
+    $userAttribueToAdd = $type.'_class';
 
-    foreach ($data as $key => $d) {
-      $pos = Position::where('user_id', '=', $d->id)
-      ->where('type', '=', $type)
-      ->first();
-      if($pos) {
-        $d = $this->getPositionClass($d, $pos);
-        if (($type == 'giver' && $pos->given_points != 100 - $d->giving_balance) || ($type == 'receiver' && $pos->received_points != $d->received_this_month)) {
+    foreach ($userArray as $key => $user) {
 
-          if ($type == 'giver') {
-            $pos->given_points = 100 - $d->giving_balance;
-            $pos = $this->checkForPositionChanges($pos, $key + 1, 'giver_class');
-            $d->giver_class = $pos->giver_class;
-          }
+      $pos =  Position::where('type', $type)->where('user_id', $user->id)->first();
 
-          if ($type == 'receiver') {
-            $pos->received_points = $d->received_this_month;
-            $pos = $this->checkForPositionChanges($pos, $key + 1, 'receiver_class');
-            $d->receiver_class = $pos->receiver_class;
-          }
-          $pos->save();
-        }
+      if($key+1 > $pos->old_position) {
+        $user->$userAttribueToAdd = $this->getPositionClass('down');
       }
-      else {
-        $pos = new Position;
-        $pos->user_id = $d->id;
-        $pos->type = $type;
-        $pos->username = $d->display_name;
-        $pos->old_position = $key + 1;
-        $pos->giver_class = 'init fa fa-sun-o';
-        $pos->receiver_class = 'init fa fa-sun-o';
 
-        if($type == 'giver') {
-          $pos->given_points = 100 - $d->giving_balance;
-          $d->giver_class = $pos->giver_class;
-        }
-
-        if($type == 'receiver') {
-          $pos->received_points = $d->received_this_month;
-          $d->receiver_class = $pos->receiver_class;
-        }
-        $pos->save();
+      if($key+1 == $pos->old_position) {
+        $user->$userAttribueToAdd = $this->getPositionClass('same');
       }
+
+      if($key+1 < $pos->old_position) {
+        $user->$userAttribueToAdd = $this->getPositionClass('up');
+      }
+
+      $pos->old_position = $key+1;
+      $pos->save();
     }
-    return $data;
+    return $userArray;
   }
 
-  public function getPositionClass($d, $pos) {
-    if($pos->type == "giver") {
-      $d->giver_class = $pos->giver_class;
-    }
-    if($pos->type == "receiver") {
-      $d->receiver_class = $pos->receiver_class;
-    }
-    return $d;
-  }
+  function getPositionClass($evidence) {
 
-  function checkForPositionChanges($pos, $newPosition, $type) {
-    $oldPosition = $pos->old_position;
-    if ($oldPosition == $newPosition) {
-      $pos->$type = 'no_move fa fa-arrows-h';
-    }
-    if ($oldPosition < $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'down', $type);
-    }
-    if ($oldPosition > $newPosition) {
-      $this->swapPlaces($pos, $newPosition, 'up', $type);
-    }
-    return $pos;
-  }
-
-  function swapPlaces($pos, $newPosition, $direction, $type) {
-
-    switch ($direction) {
+    switch ($evidence) {
 
       case 'down':
-      $pos->old_position = $newPosition;
-      $pos->$type = 'lower fa fa-arrow-down';
-      return $pos;
+        return 'lower fa fa-arrow-down';
+        break;
 
       case 'up':
-      $pos->$type = 'higher fa fa-arrow-up';
-      $pos->old_position = $newPosition;
-      return $pos;
+        return 'higher fa fa-arrow-up';
+        break;
+
+      case 'same':
+        return 'no_move fa fa-arrows-h';
+        break;
+
+      default:
+        # code...
+        break;
     }
+
+  }
+
+  function storePosition($position) {
+
   }
 }

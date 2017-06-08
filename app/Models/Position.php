@@ -44,4 +44,8 @@ class Position extends Model
     return self::where('user_id', $user_id)->where('type', '=', 'receiver')->value('class');
   }
 
+  function givers() {
+    return self::where('type', 'giver');
+  }
+
 }

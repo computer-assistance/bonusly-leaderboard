@@ -18,9 +18,10 @@ class BonuslyLeaderboardController extends Controller
   }
 
   public function showBoard() {
-
     if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
     // if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
+
+      $logoImgFile = config('bonusly.logoImgFile');
 
       $divisor = 0;
       $givenTotal = 0;
@@ -50,8 +51,8 @@ class BonuslyLeaderboardController extends Controller
       $highestGiverPoints = $this->bonusHelper->getHighestPoints($giverPointsData, 'giving_balance');
       $highestReceiverPoints = $this->bonusHelper->getHighestPoints($giverPointsData, 'received_this_month');
 
-      $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
 
+      $divisor = $this->bonusHelper->getTheHighest($highestReceiverPoints, $highestGiverPoints);
       $widthFactor = $this->bonusHelper->makeWidthFactor($highestReceiverPoints, $highestGiverPoints);
 
 
@@ -65,8 +66,9 @@ class BonuslyLeaderboardController extends Controller
       return $b->received_this_month - $a->received_this_month;
       });
 
-      $giverPointsData = $this->bonusHelper->setPositions($giverPointsData, 'giver');
-      $receiverPointsData = $this->bonusHelper->setPositions($receiverPointsData, 'receiver');
+
+      $giverPointsData = $this->bonusHelper->checkForPositionChanges($giverPointsData, 'giver');
+      $receiverPointsData = $this->bonusHelper->checkForPositionChanges($receiverPointsData, 'receiver');
 
 
       $giverPointsData = array_slice($giverPointsData,0, 10); // limit to top ten
@@ -99,6 +101,6 @@ class BonuslyLeaderboardController extends Controller
       $thisDay = Cache::get('thisDay');
       $widthFactor = Cache::get('widthFactor');
     }
-    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay', 'widthFactor'));
+    return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay', 'widthFactor', 'logoImgFile' ));
   }
 }

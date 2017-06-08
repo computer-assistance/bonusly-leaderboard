@@ -27,19 +27,6 @@ class BonuslyToken
       $bonuslyEnvTokens = config('bonusly');
       $urlParamKey = substr(strrchr($request->path(), "/"),1);
     }
-    //     else {
-    //     }
-    //   return $next($request);
-  }
-
-  function sendEnhancedResponse($message , $successBool, $responseType)	{
-    $response = [
-      'success'      	=> $successBool,
-      'response_type'	=> $responseType,
-      'username' 			=> 'Seraph',
-      'text'         	=> $message
-    ];
-    return Response::json($response, ($response['success']) ? 200 : 400);
   }
 }
 
