@@ -88,6 +88,7 @@ class BonuslyLeaderboardController extends Controller
       Cache::put('divisor', $divisor, $expiresAt);
       Cache::put('thisDay', $thisDay, $expiresAt);
       Cache::put('widthFactor', $widthFactor, $expiresAt);
+      Cache::put('logoImgFile', $logoImgFile, $expiresAt);
     }
     else {
       $giverPointsData = Cache::get('giverPointsData');
@@ -100,6 +101,7 @@ class BonuslyLeaderboardController extends Controller
       $divisor = Cache::get('divisor');
       $thisDay = Cache::get('thisDay');
       $widthFactor = Cache::get('widthFactor');
+      $logoImgFile = Cache::get('logoImgFile');
     }
     return view('leaderboard', compact('giverPointsData', 'receiverPointsData', 'givenTotal', 'receivedTotal', 'divisor', 'thisMonth', 'thisDay', 'widthFactor', 'logoImgFile' ));
   }
