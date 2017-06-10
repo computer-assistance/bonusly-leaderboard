@@ -18,8 +18,8 @@ class BonuslyLeaderboardController extends Controller
   }
 
   public function showBoard() {
-    if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
-    // if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
+    // if (!Cache::has('giverPointsData') && !Cache::has('receiverPointsData')) { // production
+    if (Cache::has('giverPointsData') && Cache::has('receiverPointsData')) { // development
 
       $logoImgFile = config('bonusly.logoImgFile');
 

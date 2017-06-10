@@ -178,16 +178,17 @@ class BonuslyHelper
     }
 
     foreach ($userArray as $key => $user) {
-      
+
       $user->$userAttribueToAdd = null;
 
       // we need to stop zero values from having a class assigned
       // this allows us to check the correct value to checkeck for zero
       $userPoints = $this->getUserPoints($user, $type);
 
-      $pos =  Position::where('type', $type)->where('user_id', $user->id)->first();
+      $pos = Position::where('type', $type)->where('user_id', $user->id)->first();
 
       if($pos && $userPoints > 0 ) {
+
         if($key+1 > $pos->old_position) {
           $user->$userAttribueToAdd = $this->getPositionClass('down');
         }
@@ -199,20 +200,24 @@ class BonuslyHelper
         if($key+1 < $pos->old_position) {
           $user->$userAttribueToAdd = $this->getPositionClass('up');
         }
-        $pos->old_position = $key+1;
-        $pos->save();
+        $pos->save(['old_position' => $key+1]);
       }
+
       else if($pos) {
         $user->$userAttribueToAdd = $this->getPositionClass('new');
       }
+
       else {
+
         $user->$userAttribueToAdd = $this->getPositionClass('new');
+
         $pos = new Position;
+
         if ($type == 'giver') {
-          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1, 'given_points' => (100 - $user->giving_balance), 'received_points' => null]);
+          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1]);
         }
         if ($type == 'receiver') {
-          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1, 'given_points' => null, 'received_points' => $user->received_this_month]);
+          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1]);
         }
         $pos->save();
       }
