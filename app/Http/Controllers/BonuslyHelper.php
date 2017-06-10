@@ -170,34 +170,61 @@ class BonuslyHelper
   }
 
   function checkForPositionChanges($userArray, $type) {
-// dd($userArray);
+// dump($userArray);
     $userAttribueToAdd = $type.'_class';
 
+
+    foreach ($userArray as $user) {
+    }
+
     foreach ($userArray as $key => $user) {
+      
+      $user->$userAttribueToAdd = null;
+
+      // we need to stop zero values from having a class assigned
+      // this allows us to check the correct value to checkeck for zero
+      $userPoints = $this->getUserPoints($user, $type);
 
       $pos =  Position::where('type', $type)->where('user_id', $user->id)->first();
 
-      if($key+1 > $pos->old_position) {
-        $user->$userAttribueToAdd = $this->getPositionClass('down');
+      if($pos && $userPoints > 0 ) {
+        if($key+1 > $pos->old_position) {
+          $user->$userAttribueToAdd = $this->getPositionClass('down');
+        }
+
+        if($key+1 == $pos->old_position) {
+          $user->$userAttribueToAdd = $this->getPositionClass('same');
+        }
+
+        if($key+1 < $pos->old_position) {
+          $user->$userAttribueToAdd = $this->getPositionClass('up');
+        }
+        $pos->old_position = $key+1;
+        $pos->save();
+      }
+      else if($pos) {
+        $user->$userAttribueToAdd = $this->getPositionClass('new');
+      }
+      else {
+        $user->$userAttribueToAdd = $this->getPositionClass('new');
+        $pos = new Position;
+        if ($type == 'giver') {
+          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1, 'given_points' => (100 - $user->giving_balance), 'received_points' => null]);
+        }
+        if ($type == 'receiver') {
+          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1, 'given_points' => null, 'received_points' => $user->received_this_month]);
+        }
+        $pos->save();
       }
 
-      if($key+1 == $pos->old_position) {
-        $user->$userAttribueToAdd = $this->getPositionClass('same');
-      }
-
-      if($key+1 < $pos->old_position) {
-        $user->$userAttribueToAdd = $this->getPositionClass('up');
-      }
-
-      $pos->old_position = $key+1;
-      $pos->save();
     }
+    // dd($userArray);
     return $userArray;
   }
 
-  function getPositionClass($evidence) {
+  function getPositionClass($direction = null) {
 
-    switch ($evidence) {
+    switch ($direction) {
 
       case 'down':
         return 'lower fa fa-arrow-down';
@@ -212,11 +239,30 @@ class BonuslyHelper
         break;
 
       default:
-        # code...
+        return 'init fa fa-sun-o';
         break;
     }
 
   }
+
+  function getUserPoints($user, $type) {
+
+    switch ($type) {
+
+      case 'giver':
+        return 100 - $user->giving_balance;
+        break;
+
+      case 'receiver':
+        return $user->received_this_month;
+        break;
+
+      default:
+        //
+        break;
+    }
+  }
+
 
   function storePosition($position) {
 
