@@ -9,3 +9,4 @@ Homestead.yaml
 .env
 dump.rdb
 npm-debug.log
+lbdumpsat1055.sql
