@@ -30,5 +30,4 @@ class Position extends Model
   function givers() {
     return self::where('type', 'giver');
   }
-
 }
