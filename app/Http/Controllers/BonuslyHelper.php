@@ -214,10 +214,10 @@ class BonuslyHelper
         $pos = new Position;
 
         if ($type == 'giver') {
-          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1]);
+          $pos = $pos->create(['user_id' => $user->id, 'username' => $user->username, 'type' => $type, 'old_position' => $key+1]);
         }
         if ($type == 'receiver') {
-          $pos = $pos->create(['user_id' => $user->id, 'type' => $type, 'old_position' => $key+1]);
+          $pos = $pos->create(['user_id' => $user->id, 'username' => $user->username, 'type' => $type, 'old_position' => $key+1]);
         }
         $pos->save();
       }

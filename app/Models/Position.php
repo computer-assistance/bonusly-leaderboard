@@ -13,7 +13,7 @@ class Position extends Model
   */
   protected $table = 'positions';
 
-  protected $fillable =   ['user_id', 'type', 'old_position'];
+  protected $fillable =   ['user_id', 'username', 'type', 'old_position'];
 
   protected $primaryKey = 'user_id';
 
