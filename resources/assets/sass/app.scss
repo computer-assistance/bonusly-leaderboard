@@ -1,0 +1,22 @@
+
+// Fonts
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+
+// Variables
+@import "variables";
+@import "leaderboard";
+
+// Bootstrap
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+// @fa_path: "node_modules/font-awesome/scss";
+@import "node_modules/font-awesome/scss/_variables.scss";
+@import "node_modules/font-awesome/scss/_mixins.scss";
+@import "node_modules/font-awesome/scss/_path.scss";
+@import "node_modules/font-awesome/scss/_core.scss";
+@import "node_modules/font-awesome/scss/_icons.scss";
+
+i {
+background: none !important;
+}
