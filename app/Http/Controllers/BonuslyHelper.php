@@ -125,10 +125,24 @@ class BonuslyHelper
   }
 
   function makeUsers() {
-    return $this->removeUnwantedUsers($this->makeBonuslyApiCall($this->giveUrl()));
+    $users = $this->removeUnwantedUsers($this->makeBonuslyApiCall($this->giveUrl()));
+    return $this->removeDownstairsUsers($users);
   }
 
   function removeUnwantedUsers($users) {
+
+    $unwantedUsers = explode('-', config('bonusly.downstairsUsers'));
+
+    $returnArray = array();
+    foreach ($users as $user) {
+      if (!in_array($user->username, $unwantedUsers, true)) {
+        $returnArray[] = $user;
+      }
+    }
+    return $returnArray;
+  }
+
+  function removeDownstairsUsers($users) {
 
     $unwantedUsers = explode('-', config('bonusly.unwantedUsers'));
 
@@ -140,6 +154,8 @@ class BonuslyHelper
     }
     return $returnArray;
   }
+
+
 
   function sanitisePoints($data, $prop) {
 
